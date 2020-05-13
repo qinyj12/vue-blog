@@ -26,16 +26,16 @@
 		- [ ] 删除文章
 
 ## 目录
-|-- frontend/
-|　|-- src/（css + js）
-|　|-- index.html
-|-- backend/
-|　|-- api/（orm接口）
-|　|-- database/（数据库）
-|　|-- config/（配置文件）
-|　|-- test/（测试用）
-|　|-- app.py（主程序，调用api）
-|-- README.md
+|-- frontend/  
+|　|-- src/（css + js）  
+|　|-- index.html  
+|-- backend/  
+|　|-- api/（orm接口）  
+|　|-- database/（数据库）  
+|　|-- config/（配置文件）  
+|　|-- test/（测试用）  
+|　|-- app.py（主程序，调用api）  
+|-- README.md  
 
 ## 待解决
 - 加载动画
