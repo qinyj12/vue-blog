@@ -2,9 +2,10 @@
     <div class="comp">
         <div class="loginBox">
             <div class="bar leftbar">
+                <div>haha</div>
                 <transition name="left-slide">
                     <div class="blank" v-if="show">
-                        <p v-if="show">登录</p>
+                        <p v-if="show" class="inner inner1">登录</p>
                     </div>
                 </transition>
                 
@@ -57,15 +58,29 @@ export default {
                     display flex
                     justify-content center
                     align-items center
-                .left-slide-enter-active, .right-slide-enter-active 
-                    transition all .5s
-                .left-slide-leave-active, .right-slide-leave-active
-                    transition all .5s
-                .left-slide-enter, .left-slide-leave-to
+                    .inner
+                        transition all 0.5s
+                .left-slide-enter-active
+                    transition all 0.5s
+                .left-slide-leave-active
+                    transition all 0.5s
+                    .inner1
+                        transform translateX(300px)
+                .left-slide-enter
                     transform translateX(-100%)
-                .right-slide-enter, .right-slide-leave-to
-                    transform translateX(100%)
+                    .inner1
+                        transform translateX(300px)
+                .left-slide-leave-to
+                    transform translateX(-100%)
                 
+                .right-slide-enter-active 
+                    transition all 0.5s
+                .right-slide-leave-active
+                    transition all 0.5s
+                .right-slide-enter
+                    transform translateX(100%)
+                .right-slide-leave-to
+                    transform translateX(100%)
                 button
                     z-index 2
 </style>
