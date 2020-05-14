@@ -1,20 +1,53 @@
 <template>
-    <div class="comp">
-        <div class="loginBox">
-            <div class="bar leftbar">
-                <div>haha</div>
-                <transition name="left-slide">
-                    <div class="blank" v-if="show">
-                        <p v-if="show" class="inner inner1">登录</p>
+    <!-- 最外层盒子，用于存放组件 -->
+    <div>
+        <!-- 组件 -->
+        <div class="login-box">
+            <div class="bar">
+                <transition name="left-bar-slide">
+                    <!-- 点击按钮切换登录 -->
+                    <div v-if="!login" class="login-or-signup">
+                        <h1>Welcom Back!</h1>
+                        <p>老铁，现在就登录吧！</p>
+                        <el-button @click="login = true" round>登录</el-button>
                     </div>
                 </transition>
-                
-            </div>
-            <div class="bar rightbar">
-                <transition name="right-slide">
-                    <div class="blank" v-if="!show"></div>
+
+                <transition name="left-blank-slide">
+                    <!-- 登录表单 -->
+                    <div class="blank left-blank" v-if="login">
+                        <div v-if="login" class="login-signup-form login-form">
+                            <h1>登录</h1>
+                            <el-input placeholder="请输入邮箱" v-model="email" clearable></el-input>
+                            <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
+                            <p>忘记密码啦？</p>
+                            <el-button type="success" round :loading="false">登录</el-button>
+                        </div>
+                    </div>
                 </transition>
-                <button @click="show = !show">注册</button>
+            </div>
+            <div class="bar">
+                <transition name="right-bar-slide">
+                    <!-- 点击按钮切换注册 -->
+                    <div v-if="login" class="login-or-signup">
+                        <h1>Hello, Friend!</h1>
+                        <p>来我博客灌水吧！</p>
+                        <el-button @click="login = false" round>注册</el-button>
+                    </div>
+                </transition>
+
+                <transition name="right-blank-slide">
+                    <!-- 注册表单 -->
+                    <div class="blank right-blank" v-if="!login">
+                        <div v-if="!login" class="login-signup-form signup-form">
+                            <h1>注册</h1>
+                            <el-input placeholder="请输入邮箱" v-model="email" clearable></el-input>
+                            <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
+                            <p>不想注册嘛？</p>
+                            <el-button type="warning" round :loading="false">注册</el-button>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
     </div>
@@ -23,64 +56,148 @@
 export default {
     data() {
         return {
-            show:true
+            login: true,
+            email: null,
+            password: null
         }
     },
     methods: {
     },
 }
 </script>
+<style lang="stylus">
+.el-input__inner
+    background-color #eee
+.el-button--default
+    background-color transparent
+    color white
+ 
+</style>
 <style lang="stylus" scoped>
 *
     padding 0
     margin 0
-    .comp
-        width 80vw
-        .loginBox
-            width 768px
-            height 480px
+
+    // 组件外框架
+    .login-box
+        width 768px
+        height 480px
+        display flex
+        background-image url('../assets/animalcrossing2.png')
+        background-size cover
+        border-radius 15px
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        overflow-x hidden
+        // 组件分成左右两半
+        .bar
+            width 50%
+            box-sizing border-box
             display flex
-            background-color seagreen
-            .bar
-                width 50%
-                border 1px solid green
-                box-sizing border-box
+            justify-content center
+            align-items center
+            position relative
+            background-color rgba(0,0,0, 0.6) // 在background-image上加遮罩
+            // 点击按钮切换注册或登录
+            .login-or-signup
+                width 75%
+                transition all 0.5s
+                height 80%
                 display flex
+                flex-direction column
                 justify-content center
                 align-items center
-                position relative
-                .blank
-                    width 100%
-                    height 100%
-                    position absolute
-                    background-color white
-                    z-index 1
+                *
+                    margin-top 20px
+                h1
+                    margin 20px 0
+                h1, p
+                    color white
+
+            // 左边绿色组件
+            .left-bar-slide-enter-active
+                transition all 0.5s                        
+            .left-bar-slide-leave-active
+                transition all 0.5s
+            .left-bar-slide-enter
+                transform translateX(-10%)
+            .left-bar-slide-leave-to
+                transform translateX(-10%)
+
+            // 右边绿色组件
+            .right-bar-slide-enter-active
+                transition all 0.5s
+            .right-bar-slide-leave-active
+                transition all 0.5s
+            .right-bar-slide-enter
+                transform translateX(10%)
+            .right-bar-slide-leave-to
+                transform translateX(10%)
+
+            // 白色组件
+            .blank
+                width 100%
+                height 100%
+                position absolute
+                background-color white
+                z-index 1
+                display flex
+                flex-direction column
+                justify-content center
+                align-items center
+                overflow hidden
+                // 登录表单/注册表单
+                .login-signup-form
+                    width 75%
+                    transition all 0.5s
+                    height 80%
                     display flex
+                    flex-direction column
                     justify-content center
                     align-items center
-                    .inner
-                        transition all 0.5s
-                .left-slide-enter-active
-                    transition all 0.5s
-                .left-slide-leave-active
-                    transition all 0.5s
-                    .inner1
-                        transform translateX(300px)
-                .left-slide-enter
-                    transform translateX(-100%)
-                    .inner1
-                        transform translateX(300px)
-                .left-slide-leave-to
-                    transform translateX(-100%)
-                
-                .right-slide-enter-active 
-                    transition all 0.5s
-                .right-slide-leave-active
-                    transition all 0.5s
-                .right-slide-enter
-                    transform translateX(100%)
-                .right-slide-leave-to
-                    transform translateX(100%)
-                button
-                    z-index 2
+                    *
+                        margin-top 20px
+                    h1
+                        margin 20px 0
+                    p
+                        color dimgray
+                    
+            .left-blank
+                border-radius 15px 0 0 15px
+            .right-blank
+                border-radius 0 15px 15px 0
+
+            // 左边白色组件的动画
+            .left-blank-slide-enter-active
+                transition all 0.5s
+
+            .left-blank-slide-leave-active
+                transition all 0.5s
+                .login-form
+                    transform translateX(200%)
+
+            .left-blank-slide-enter
+                transform translateX(-100%)
+                .login-form
+                    transform translateX(200%)
+
+            .left-blank-slide-leave-to
+                transform translateX(-100%)
+
+            // 右边白色组件的动画
+            .right-blank-slide-enter-active 
+                transition all 0.5s
+
+            .right-blank-slide-leave-active
+                transition all 0.5s
+                .signup-form
+                    transform translateX(-200%)
+
+            .right-blank-slide-enter
+                transform translateX(100%)
+                .signup-form
+                    transform translateX(-200%)
+
+            .right-blank-slide-leave-to
+                transform translateX(100%)
+
 </style>
