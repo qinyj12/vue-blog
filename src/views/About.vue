@@ -1,5 +1,13 @@
 <template>
-  <div>
-    <h1>this is an about page</h1>
-  </div>
+    <div>
+        <HeaderComp/>
+    </div>
 </template>
+<script>
+import HeaderComp from '@/components/HeaderComp.vue';
+export default {
+    components: {
+        HeaderComp
+    }
+}
+</script>
