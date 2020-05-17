@@ -1,20 +1,43 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/login">Login</router-link>
+    <div class="app-header">
+        <HeaderComp/>
     </div>
-    <router-view/>
+    <div class="app-content">
+        <NavigationComp/>
+        <router-view/>
+        <FooterComp/>
+    </div>
+
   </div>
 </template>
-
-<style lang="stylus">
+<script>
+import HeaderComp from '@/components/HeaderComp2.vue';
+import NavigationComp from '@/components/NavigationComp.vue';
+import FooterComp from '@/components/FooterComp.vue'
+export default {
+    components: {
+        HeaderComp,
+        NavigationComp,
+        FooterComp
+    }
+}
+</script>
+<style lang="stylus" scope>
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   text-align center
   color #2c3e50
-  margin-top 60px
+  position relative
+  width 100%
+  .app-header
+    position fixed
+    z-index -1
+  .app-content
+    position absolute
+    width 100%
+    top calc(100vh - 56px)
+    background-color white
 </style>

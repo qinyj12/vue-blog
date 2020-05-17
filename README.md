@@ -3,9 +3,9 @@
 	* 用户
 		- [x] 登录组件
 		- [x] header组件
-		- [ ] 导航栏
-		- [ ] footer组件
-		- [ ] 登录页
+		- [x] 导航栏
+		- [x] footer组件
+		- [x] 登录页
 		- [ ] 文章列表组件
 		- [ ] 文章列表页（主页）
 		- [ ] 文章详情组件
@@ -43,11 +43,12 @@
 |　|-- app.py（主程序，调用api）  
 |-- README.md  
 
-## 待解决
+## 难点
 - 加载动画
-	- [x] 打开首页之前的白屏（最后在index.html中添加）
+	- [x] 打开首页之前的白屏，即过渡动画（最后在index.html中添加）
 	- [ ] 切换路由之间的动画
-	- [ ] 屏幕滚动，动态加载组件
-	- [ ] 动态加载组件时的动画
-- 其他
-	- [x] 加载codepen效果
+	- [ ] 屏幕滚动，动态加载组件，即懒加载
+	- [ ] 动态加载组件时的动画，即懒加载的动画
+    - [x] v-for倒序迭代列表，直接用原型链v-for="(item, index) in Array.prototype.reverse.call(item)"
+    - [ ] css hack，用来连接article-shadow和article-main
+    - [ ] article-shadow的纵横比还是不对

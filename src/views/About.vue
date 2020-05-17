@@ -1,13 +1,8 @@
 <template>
-    <div>
-        <HeaderComp/>
+    <div id="about">
+        <h1>this is about page</h1>
     </div>
 </template>
-<script>
-import HeaderComp from '@/components/HeaderComp.vue';
-export default {
-    components: {
-        HeaderComp
-    }
-}
-</script>
+<style lang="stylus" scoped>
+
+</style>

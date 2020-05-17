@@ -7,78 +7,80 @@
                 <h1 class="tittle-3">工</h1>
                 <h1 class="tittle-4">坊</h1>
             </div>
-            <div class="bb8">
-                <div class="bb8-body">
-                    <div class="dot dot-1">
-                        <div class="line line-1"></div>
-                        <div class="line line-2"></div>
-                        <div class="line line-3"></div>
+            <div class="artboard-for-bb8">
+                <div class="bb8">
+                    <div class="bb8-body">
+                        <div class="dot dot-1">
+                            <div class="line line-1"></div>
+                            <div class="line line-2"></div>
+                            <div class="line line-3"></div>
+                        </div>
+                        <div class="dot dot-2"></div>
+                        <div class="circle circle-1"></div>
+                        <div class="circle circle-2"></div>
+                        <div class="circle circle-3"></div>
                     </div>
-                    <div class="dot dot-2"></div>
-                    <div class="circle circle-1"></div>
-                    <div class="circle circle-2"></div>
-                    <div class="circle circle-3"></div>
-                </div>
-                <div class="body-shadow-crop">
-                    <div class="body-shadow"></div>
-                </div>
-                <div class="bb8-head">
-                    <div class="head-bottom">
-                        <div class="head-side-1"></div>
-                        <div class="head-side-2"></div>
-                        <div class="head-bottom-base"></div>
+                    <div class="body-shadow-crop">
+                        <div class="body-shadow"></div>
                     </div>
-                    <div class="head-top-crop">
-                        <div class="head-top"></div>
+                    <div class="bb8-head">
+                        <div class="head-bottom">
+                            <div class="head-side-1"></div>
+                            <div class="head-side-2"></div>
+                            <div class="head-bottom-base"></div>
+                        </div>
+                        <div class="head-top-crop">
+                            <div class="head-top"></div>
+                        </div>
+                        <div class="lens"></div>
+                        <div class="freckle"></div>
                     </div>
-                    <div class="lens"></div>
-                    <div class="freckle"></div>
-                </div>
-                <div class="speedlines">
-                    <div class="one tail"></div>
-                    <div class="two tail"></div>
-                    <div class="three"></div>
-                    <div class="four"></div>
-                    <div class="five tail"></div>
-                </div>
-                <div class="sparkles">
-                    <div class="one small pulse-1"></div>
-                    <div class="two blue small pulse-2"></div>
-                    <div class="three blue med pulse-3"></div>
-                    <div class="four orange pulse-2"></div>
-                    <div class="five orange pulse-1"></div>
-                    <div class="six blue small pulse"></div>
-                    <div class="seven blue small pulse"></div>
-                    <div class="eight small pulse-3"></div>
-                    <div class="nine pulse"></div>
-                    <div class="ten orange small-1 pulse"></div>
-                    <div class="eleven small pulse"></div>
-                    <div class="twelve small pulse-2"></div>
-                    <div class="thirteen orange small pulse"></div>
-                    <div class="fourteen orange med pulse-3"></div>
-                    <div class="fifteen small pulse-1"></div>
-                    <div class="sixteen small pulse"></div>
-                </div>
-                <div class="ground">
-                    <div class="one">
-                        <div class="bump move-1"></div>
+                    <div class="speedlines">
+                        <div class="one tail"></div>
+                        <div class="two tail"></div>
+                        <div class="three"></div>
+                        <div class="four"></div>
+                        <div class="five tail"></div>
                     </div>
-                    <div class="two"></div>
-                    <div class="three">
-                        <div class="bump move-2"></div>
+                    <div class="sparkles">
+                        <div class="one small pulse-1"></div>
+                        <div class="two blue small pulse-2"></div>
+                        <div class="three blue med pulse-3"></div>
+                        <div class="four orange pulse-2"></div>
+                        <div class="five orange pulse-1"></div>
+                        <div class="six blue small pulse"></div>
+                        <div class="seven blue small pulse"></div>
+                        <div class="eight small pulse-3"></div>
+                        <div class="nine pulse"></div>
+                        <div class="ten orange small-1 pulse"></div>
+                        <div class="eleven small pulse"></div>
+                        <div class="twelve small pulse-2"></div>
+                        <div class="thirteen orange small pulse"></div>
+                        <div class="fourteen orange med pulse-3"></div>
+                        <div class="fifteen small pulse-1"></div>
+                        <div class="sixteen small pulse"></div>
                     </div>
-                    <div class="four">
-                        <div class="bump"></div>
-                    </div>
-                    <div class="five"></div>
-                    <div class="six">
-                        <div class="bump move-2"></div>
-                    </div>
-                    <div class="seven">
-                        <div class="bump"></div>
-                    </div>
-                    <div class="eight">
-                        <div class="bump move-1"></div>
+                    <div class="ground">
+                        <div class="one">
+                            <div class="bump move-1"></div>
+                        </div>
+                        <div class="two"></div>
+                        <div class="three">
+                            <div class="bump move-2"></div>
+                        </div>
+                        <div class="four">
+                            <div class="bump"></div>
+                        </div>
+                        <div class="five"></div>
+                        <div class="six">
+                            <div class="bump move-2"></div>
+                        </div>
+                        <div class="seven">
+                            <div class="bump"></div>
+                        </div>
+                        <div class="eight">
+                            <div class="bump move-1"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,36 +91,23 @@
 * {
 	box-sizing: border-box;
 }
-body {
-	background: #eee;
-}
-.headerComp {
-    border: 1px solid;
-}
 .artboard {
 	/* width: 800px; */
 	height: 400px;
-	background: #F5FAFC;
-	box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.2);
-	border-radius: 3px;
-	margin: 50px auto;
-	border: 20px white solid;
+	background: #446A70;
 	position: relative;
     overflow: hidden;
-    transform: translateY(-50px);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 .tittle {
-    position: absolute;
-    /* background-color: rgba(0, 0, 0, 0.2); */
-    top: 25%;
-    left: 20%;
-    height: 50%;
     width: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1;
-    color: SteelBlue;
+    color: #eee;
 }
 .tittle > h1 {
     margin: 10px;
@@ -147,12 +136,16 @@ body {
     animation-duration: 2s;
     animation-iteration-count: infinite;
 }
+.artboard-for-bb8 {
+    position: relative;
+    width: 450px;
+    height: 300px;
+    padding: 30px 0 50px 50px;
+}
 .bb8 {
 	width: 220px;
 	height: 220px;
 	position: absolute;
-	top: 20%;
-    right: 20%;
     transform: scale(0.7);
 }
 .bb8-body {
