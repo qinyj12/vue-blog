@@ -1,31 +1,33 @@
 <template>
     <div id="articleListComp">
         <ul class="all-article">
-            <li v-for="item in article" :key="item">
-                <!-- 用于保持纵横比 -->
-                <div class="article-container">
-                    <!-- 存放正文 -->
-                    <div class="article-main">
-                        <div class="always-show">
-                            <!-- 图片 -->
-                            <div class="article-pic" @mouseenter="isHover" @mouseleave="notHover"></div>
-                            <!-- 头像-标题-时间 -->
-                            <div class="avatar-tittle-time">
-                                <div class="article-avatar"></div>
-                                <div class="tittle-and-time">
-                                    <div class="article-tittle">{{item.tittle}}</div>
-                                    <div class="article-time">{{item.time}}</div>
-                                </div>
-                            </div>
-                            <div class="article-abstract" v-show="false">{{item.abstract}}</div>
-                            <div class="article-footer" v-show="false">阅读量</div>
+            <li v-for="(item, index) in article" :key="item.tittle">
+                <!-- 只是用来赋值方法的 -->
+                <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
+                    <div class="article-pic"></div>
+                    <div class="avatar-tittle-time">
+                        <div class="article-avatar"></div>
+                        <div class="tittle-time">
+                            <div class="article-tittle">{{item.tittle}}</div>
+                            <div class="article-time">{{item.time}}</div>
                         </div>
-                        <!-- 阴影，作为always-show的兄弟，拥有和alway-show一样的宽高 -->
-                        <div class="article-shadow" @mouseenter="isHover" @mouseleave="notHover"></div>
                     </div>
+                    <div class="article-views-comments">
+                        <transition-group name="slide-fade">
+                            <div class="article-views" v-show="item.showfooter" :key="item.views">
+                                <div class="views-icon"></div>
+                                <div class="number">{{item.views}}</div>
+                            </div>
+                            <div class="article-comments" v-show="item.showfooter" :key="item.comments">
+                                <div class="comments-icon"></div>
+                                <div class="number">{{item.comments}}</div>
+                            </div>                        
+                        </transition-group>
 
+
+                    </div>
+                    <div class="article-shadow" ref="shadow"></div>
                 </div>
-
             </li>
         </ul>
     </div>
@@ -38,88 +40,129 @@ export default {
                 {
                     tittle: '我的第一篇文章',
                     abstract: '这是我的第一篇文章，我也不知道写什么',
-                    time: '2020年5月16日'
+                    time: '2020年5月16日',
+                    views: '100',
+                    comments: '5',
+                    showfooter: false
                 },
                 {
                     tittle: '我的第二篇文章',
                     abstract: '这是我的第二篇文章，我仍然不知道写什么',
-                    time: '2020年5月17日'
+                    time: '2020年5月17日',
+                    views: '50',
+                    comments: '3',
+                    showfooter: false
                 },
             ],
             ifShow: false
         }
     },
     methods: {
-        isHover() {
-            this.ifShow = true
+        isHover(index) {
+            this.$refs.shadow[index].classList.add('article-shadow-hover');
+            this.article[index].showfooter = !this.article[index].showfooter 
         },
-        notHover() {
-            this.ifShow = false
+        noHover(index) {
+            this.$refs.shadow[index].classList.remove('article-shadow-hover');
+            this.article[index].showfooter = !this.article[index].showfooter 
         }
     },
 }
 </script>
 <style lang="stylus" scoped>
 $avatarTittleTimeH = 60px
-ul.all-article
-    list-style none
-    li
-        box-sizing border-box
-        margin 20px
-        display inline-block
-        width 30%
-        padding-bottom 27%
-        position relative
-        .article-container
-            position absolute
-            width 100%
-            height 100%
-            display flex
-            justify-content center
-            align-items center
-            border 1px solid red
-            box-sizing border-box
-            transition all 0.3s
-            .article-main
+$viewsCommentsH = 30px
+#articleListComp
+    border 1px solid
+    width 60%
+    padding-left 10%
+    box-sizing border-box
+    ul.all-article
+        list-style none
+        display flex
+        padding 0
+        li
+            display inline-block
+            width 40%
+            margin 20px 40px 20px 0
+            padding 15px
+            position relative
+            .article-pic
+                width 100%
+                padding-bottom calc(100%/1.7)
+                border-radius 6px
+                background-color seagreen
                 position relative
-                border 1px solid orange
-                box-sizing border-box
-                width calc(100% - 30px)
-                height calc(100% - 30px)
+                z-index 1
+            .avatar-tittle-time
+                width 100%
+                height $avatarTittleTimeH
+                position relative
                 z-index 1
                 display flex
-                flex-direction column
-                .always-show
-                    border 1px solid yellow
-                    box-sizing border-box
-                    width 100%
-                    padding-bottom 'calc(55% + %s)' % $avatarTittleTimeH
-                    position relative
-                    .article-pic
-                        position absolute
-                        width 100%
-                        padding-bottom 55%
-                        border 1px solid
-                        background-color seagreen
-                    .avatar-tittle-time
-                        position absolute
-                        bottom 0
-                        border 1px solid blue
-                        box-sizing border-box
-                        height '%s' % $avatarTittleTimeH
-                        display flex
-                        align-items center
-                        .article-avatar
-                            width 40px
-                            height 40px
-                            background-color lightpink
-                .article-shadow
-                    position absolute
-                    right -15px
-                    top 15px
-                    width 100%
-                    padding-bottom 'calc(55% + %s)' % $avatarTittleTimeH
-                    background-color gray
-                    z-index -1
+                align-items center
+                .article-avatar
+                    width 40px
+                    height 40px
+                    border-radius 5px
+                    background-image url('../assets/avatar1.png')
+                    background-size contain
+                    background-repeat no-repeat
+                .tittle-time
+                    margin-left 10px
+                    color white
+                    font-weight bold 
+            .article-views-comments
+                width 100%
+                height $viewsCommentsH
+                position relative
+                z-index 1
+                display flex
+                align-items center
+                .article-views, .article-comments
+                    height 20px
+                    border-radius 3px
+                    background-color black
+                    color white
+                    margin 0 5px
+                    display flex
+                    flex-direction row
+                    align-items center
+                span 
+                    display flex
+                    .views-icon, .comments-icon
+                        margin 0 3px
+                        width 20px
+                        height 20px
+                        background-size contain
+                    .views-icon
+                        background-image url('../assets/eye.png')
+                        background-repeat no-repeat
+                    .comments-icon
+                        background-image url('../assets/comment.png')
+                        background-repeat no-repeat
+                    .number
+                        margin 0 3px
+                .slide-fade-enter-active 
                     transition all 0.3s
+                .slide-fade-leave-active 
+                    transition all 0.3s
+                .slide-fade-enter, .slide-fade-leave-to
+                    transform translateX(10px)
+                    opacity 0
+            
+            .article-shadow
+                background-color gray
+                width calc(100% - 30px)
+                border-radius 10px
+                padding-bottom 'calc((100% - 30px)/1.7 + %s)' % $avatarTittleTimeH
+                position absolute
+                top 30px
+                right 0
+                z-index 0
+                transition all 0.3s
+            .article-shadow-hover
+                width 100%
+                padding-bottom 'calc((100% - 30px)/1.7 + %s + %s + 30px)' % ($avatarTittleTimeH $viewsCommentsH)
+                top 0
 </style>

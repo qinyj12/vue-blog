@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
     <ArticleListComp/>
   </div>
 </template>
@@ -15,3 +15,7 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+#home
+  border 1px solid
+</style>

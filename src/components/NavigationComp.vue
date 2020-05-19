@@ -29,8 +29,14 @@
             padding 0
             display flex
             justify-content space-around
-            div.nav-end
-                width 300px
+            .nav-start
+                width 60%
+                padding-left 10%
+                box-sizing border-box
+            .nav-end
+                width 40%
+                padding-right 10%
+                box-sizing border-box
                 justify-content flex-end
             div
                 display flex
