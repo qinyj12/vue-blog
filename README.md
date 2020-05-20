@@ -54,3 +54,4 @@
     - [x] v-for倒序迭代列表，直接用原型链v-for="(item, index) in Array.prototype.reverse.call(item)"
     - [ ] css hack，用来连接article-shadow和article-main
     - [ ] article-shadow的纵横比还是不对
+	- [ ] vue操作css，这样v-for遍历对象时，可以根据对象元素的不同，加载不同的样式

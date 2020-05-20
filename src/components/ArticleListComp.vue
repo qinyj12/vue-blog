@@ -2,29 +2,34 @@
     <div id="articleListComp">
         <ul class="all-article">
             <li v-for="(item, index) in article" :key="item.tittle">
-                <!-- 只是用来赋值方法的 -->
+                <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
-                    <div class="article-pic"></div>
+                    <div class="picture-abstract">
+                        <!-- 这里动态绑定了background-image -->
+                        <div class="article-pic" :style="item.articlePic" ref="picture"></div>
+                    </div>
                     <div class="avatar-tittle-time">
-                        <div class="article-avatar"></div>
+                        <!-- 这里要动态绑定avatar -->
+                        <div class="article-avatar" :style="item.avatar"></div>
                         <div class="tittle-time">
                             <div class="article-tittle">{{item.tittle}}</div>
                             <div class="article-time">{{item.time}}</div>
                         </div>
                     </div>
                     <div class="article-views-comments">
+                        <!-- transition-group要绑定key，不然不能区分内部很多元素 -->
                         <transition-group name="slide-fade">
+                            <!-- 这里动态决定了哪些 li > div 会显示 -->
                             <div class="article-views" v-show="item.showfooter" :key="item.views">
                                 <div class="views-icon"></div>
                                 <div class="number">{{item.views}}</div>
                             </div>
+                            <!-- 这里动态决定了哪些 li > div 会显示 -->
                             <div class="article-comments" v-show="item.showfooter" :key="item.comments">
                                 <div class="comments-icon"></div>
                                 <div class="number">{{item.comments}}</div>
                             </div>                        
                         </transition-group>
-
-
                     </div>
                     <div class="article-shadow" ref="shadow"></div>
                 </div>
@@ -43,7 +48,9 @@ export default {
                     time: '2020年5月16日',
                     views: '100',
                     comments: '5',
-                    showfooter: false
+                    showfooter: false,
+                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
+                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"}
                 },
                 {
                     tittle: '我的第二篇文章',
@@ -51,25 +58,31 @@ export default {
                     time: '2020年5月17日',
                     views: '50',
                     comments: '3',
-                    showfooter: false
+                    showfooter: false,
+                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
+                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"}
                 },
             ],
-            ifShow: false
+            value: 'white'
         }
     },
     methods: {
         isHover(index) {
             this.$refs.shadow[index].classList.add('article-shadow-hover');
-            this.article[index].showfooter = !this.article[index].showfooter 
+            this.article[index].showfooter = !this.article[index].showfooter;
+            this.$refs.picture[index].classList.add('article-pic-hover')
         },
         noHover(index) {
             this.$refs.shadow[index].classList.remove('article-shadow-hover');
-            this.article[index].showfooter = !this.article[index].showfooter 
+            this.article[index].showfooter = !this.article[index].showfooter;
+            this.$refs.picture[index].classList.remove('article-pic-hover')
         }
     },
 }
 </script>
 <style lang="stylus" scoped>
+// 长宽比1.7:1，avatar-tittle-time高度60，views-comments高度30
+$articlePicRatio = 1.7
 $avatarTittleTimeH = 60px
 $viewsCommentsH = 30px
 #articleListComp
@@ -87,13 +100,23 @@ $viewsCommentsH = 30px
             margin 20px 40px 20px 0
             padding 15px
             position relative
-            .article-pic
+            .picture-abstract
                 width 100%
-                padding-bottom calc(100%/1.7)
-                border-radius 6px
-                background-color seagreen
+                padding-bottom 'calc(100%/ %s)' % $articlePicRatio
                 position relative
                 z-index 1
+                .article-pic
+                    width 100%
+                    height 100%
+                    position absolute
+                    border-radius 6px
+                    background-size 100% auto
+                    background-repeat no-repeat
+                .article-pic-hover
+                    width 50%
+                    height 50%
+                    // 此处可以仔细算一算
+                    top -30px
             .avatar-tittle-time
                 width 100%
                 height $avatarTittleTimeH
@@ -105,7 +128,6 @@ $viewsCommentsH = 30px
                     width 40px
                     height 40px
                     border-radius 5px
-                    background-image url('../assets/avatar1.png')
                     background-size contain
                     background-repeat no-repeat
                 .tittle-time
@@ -136,10 +158,10 @@ $viewsCommentsH = 30px
                         height 20px
                         background-size contain
                     .views-icon
-                        background-image url('../assets/eye.png')
+                        background-image url('../assets/icon/eye.png')
                         background-repeat no-repeat
                     .comments-icon
-                        background-image url('../assets/comment.png')
+                        background-image url('../assets/icon/comment.png')
                         background-repeat no-repeat
                     .number
                         margin 0 3px
@@ -152,10 +174,10 @@ $viewsCommentsH = 30px
                     opacity 0
             
             .article-shadow
-                background-color gray
+                background-color Silver
                 width calc(100% - 30px)
                 border-radius 10px
-                padding-bottom 'calc((100% - 30px)/1.7 + %s)' % $avatarTittleTimeH
+                padding-bottom 'calc((100% - 30px)/ %s + %s)' % ($articlePicRatio $avatarTittleTimeH)
                 position absolute
                 top 30px
                 right 0
@@ -163,6 +185,6 @@ $viewsCommentsH = 30px
                 transition all 0.3s
             .article-shadow-hover
                 width 100%
-                padding-bottom 'calc((100% - 30px)/1.7 + %s + %s + 30px)' % ($avatarTittleTimeH $viewsCommentsH)
+                padding-bottom 'calc((100% - 30px)/ %s + %s + %s + 30px)' % ($articlePicRatio $avatarTittleTimeH $viewsCommentsH)
                 top 0
 </style>

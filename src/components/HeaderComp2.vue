@@ -6,7 +6,7 @@
 #headerComp
     height calc(100vh - 56px)
     width 100vw
-    background-image url('../assets/animalcrossing3.png')
+    background-image url('../assets/background/animalcrossing3.png')
     background-size cover
     *
         margin 0

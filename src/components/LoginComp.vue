@@ -83,7 +83,7 @@ export default {
         width 768px
         height 480px
         display flex
-        background-image url('../assets/animalcrossing2.png')
+        background-image url('../assets/background/animalcrossing2.png')
         background-size cover
         border-radius 15px
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
