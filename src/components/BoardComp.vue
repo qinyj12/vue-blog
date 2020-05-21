@@ -11,6 +11,8 @@
                     <div>{{item.time}}</div>
                     <div>{{item.message}}</div>
                 </div>
+
+                <div class="demo"></div>
             </li>
         </ul>
     </div>
@@ -63,5 +65,32 @@ export default {
                     width 50px
             .time-message
                 border 1px solid
-                
+                box-sizing border-box
+                padding 10px
+                height 100px
+                // flex 1
+                display flex
+                flex-direction column
+                text-align left
+            .demo
+                width 150px
+                height 50px
+                box-sizing border-box
+                position relative
+                background-color seagreen
+                // border 1px solid
+                border-radius 3px
+                margin 10px 30px
+            .demo:before
+                content ""
+                position absolute
+                left -20px
+                top calc(50% - 10px)
+                border 10px solid
+                box-sizing border-box
+                border-color transparent seagreen transparent transparent
+                box-sizing border-box
+                width 0px
+                height 0px
+
 </style>
