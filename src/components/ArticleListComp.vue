@@ -5,15 +5,19 @@
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">
-                        <!-- 这里动态绑定了background-image -->
-                        <div class="article-pic" :style="item.articlePic" ref="picture"></div>
+                        <!-- 这里原来动态绑定了   :style="item.articlePic" -->
+                        <div class="article-pic" ref="picture">
+                            <img :src="item.articleImg" alt="头图" width="100%" height="100%">
+                        </div>
                         <transition name="abstract-fade">
                             <div class="article-abstract" v-show="item.showfooter">{{item.abstract}}</div>
                         </transition>
                     </div>
                     <div class="avatar-tittle-time">
-                        <!-- 这里要动态绑定avatar -->
-                        <div class="article-avatar" :style="item.avatar"></div>
+                        <!-- 这里原来动态绑定了   :style="item.avatar" -->
+                        <div class="article-avatar">
+                            <img :src="item.avatarImg" alt="头像" width="100%" height="100%">
+                        </div>
                         <div class="tittle-time">
                             <div class="article-tittle">{{item.tittle}}</div>
                             <div class="article-time">{{item.time}}</div>
@@ -47,26 +51,55 @@ export default {
             article: [
                 {
                     tittle: '我的第一篇文章',
-                    abstract: '这是我的第一篇文章，我也不知道写什么',
+                    abstract: '这是我的第一篇文章，我也不知道写什么。要不就写个自我介绍？',
                     time: '2020年5月16日',
                     views: '100',
                     comments: '5',
                     showfooter: false,
                     articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
-                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"}
+                    articleImg: require("../assets/article_pic/article-pic.jpg"),
+                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"},
+                    avatarImg: require("../assets/avatar/avatar1.png")
                 },
                 {
                     tittle: '我的第二篇文章',
-                    abstract: '这是我的第二篇文章，我仍然不知道写什么',
+                    abstract: '这是我的第二篇文章，我仍然不知道写什么。要不再自我介绍一遍？',
                     time: '2020年5月17日',
                     views: '50',
                     comments: '3',
                     showfooter: false,
                     articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
-                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"}
+                    articleImg: require("../assets/article_pic/article-pic2.jpg"),
+                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"},
+                    avatarImg: require("../assets/avatar/avatar2.png")
+                },
+                {
+                    tittle: '我的第3篇文章',
+                    abstract: '这是我的第3篇文章，我也不知道写什么。要不就写个自我介绍？',
+                    time: '2020年5月16日',
+                    views: '100',
+                    comments: '5',
+                    showfooter: false,
+                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
+                    articleImg: require("../assets/article_pic/article-pic.jpg"),
+                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"},
+                    avatarImg: require("../assets/avatar/avatar1.png")
+                },
+                {
+                    tittle: '我的第4篇文章',
+                    abstract: '这是我的第4篇文章，我仍然不知道写什么。要不再自我介绍一遍？',
+                    time: '2020年5月17日',
+                    views: '50',
+                    comments: '3',
+                    showfooter: false,
+                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
+                    articleImg: require("../assets/article_pic/article-pic2.jpg"),
+                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"},
+                    avatarImg: require("../assets/avatar/avatar2.png")
                 },
             ],
-            value: 'white'
+            value: 'white',
+            count: 0
         }
     },
     methods: {
@@ -89,18 +122,18 @@ $articlePicRatio = 1.7
 $avatarTittleTimeH = 60px
 $viewsCommentsH = 30px
 #articleListComp
-    border 1px solid
     width 60%
     padding-left 10%
     box-sizing border-box
     ul.all-article
         list-style none
         display flex
+        flex-wrap wrap
         padding 0
         li
             display inline-block
             width 40%
-            margin 20px 40px 20px 0
+            margin 20px 20px 20px 0
             padding 15px
             position relative
             .picture-abstract
@@ -116,18 +149,21 @@ $viewsCommentsH = 30px
                     border-radius 6px
                     background-size 100% auto
                     background-repeat no-repeat
+                    overflow hidden
                     transition all 0.3s
                     z-index 1
                 // 头图-hover
                 .article-pic-hover
-                    width 50%
-                    height 50%
-                    // 此处可以仔细算一算
-                    transform translateY(-50%)
+                    width 90%
+                    height 90%
+                    // 此处是(1 - 90%) / 2
+                    margin 0 5%
+                    // 此处是50% * 90%
+                    transform translateY(-45%)
                 // 摘要，平时隐藏
                 .article-abstract
                     position absolute
-                    height 75%
+                    height 50%
                     padding 10px 0
                     box-sizing border-box
                     text-align left
@@ -135,6 +171,7 @@ $viewsCommentsH = 30px
                     color white
                     bottom 0
                     z-index 0
+                    overflow hidden
                     transition all 0.3s
                 // 摘要动画
                 .abstract-fade-enter-active 
@@ -159,6 +196,7 @@ $viewsCommentsH = 30px
                     border-radius 5px
                     background-size contain
                     background-repeat no-repeat
+                    overflow hidden
                 // 标题-时间
                 .tittle-time
                     margin-left 10px

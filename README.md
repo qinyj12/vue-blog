@@ -6,13 +6,13 @@
 		- [x] 导航栏
 		- [x] footer组件
 		- [x] 登录页
-		- [ ] 文章列表组件
+		- [x] 文章列表组件
 		- [ ] 文章列表页（主页）
 		- [ ] 文章详情组件
 		- [ ] 文章详情页
 		- [ ] 评论展示组件
         - [ ] 留言板组件
-        - [ ] 搜索组件
+        - [x] 搜索组件
 		- [ ] 关于我组件
 		- [ ] 关于我页
 		- [ ] 移动端适配
@@ -47,11 +47,11 @@
 
 ## 难点
 - 加载动画
-	- [x] 打开首页之前的白屏，即过渡动画（最后在index.html中添加）
+	- [ ] 打开首页之前的白屏，即过渡动画（最后在index.html中添加）
 	- [ ] 切换路由之间的动画
-	- [ ] 屏幕滚动，动态加载组件，即懒加载
+	- [ ] 屏幕滚动，动态加载组件，即懒加载。懒加载element有组件，但更好的办法应该是滑到底部，再发送ajax请求
 	- [ ] 动态加载组件时的动画，即懒加载的动画
-    - [x] v-for倒序迭代列表，直接用原型链v-for="(item, index) in Array.prototype.reverse.call(item)"
-    - [ ] css hack，用来连接article-shadow和article-main
-    - [ ] article-shadow的纵横比还是不对
-	- [ ] vue操作css，这样v-for遍历对象时，可以根据对象元素的不同，加载不同的样式
+    - [x] v-for倒序迭代列表。直接用原型链v-for="(item, index) in Array.prototype.reverse.call(item)"
+    - [x] css hack，用来连接article-shadow和article-main。没必要，用ref一并操作。
+	- [x] vue操作css，这样v-for遍历对象时，可以根据对象元素的不同，加载不同的样式。直接上:style=""
+	- [ ] el-input获得焦点时的边框删除
