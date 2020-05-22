@@ -3,12 +3,12 @@
         <ul>
             <div class="nav-start">
                 <li><router-link to="/">首页</router-link></li>
-                <li><a href="">论坛</a></li>
+                <li><a href="http://forum.southdog.cool/" target="_blank">论坛</a></li>
                 <li><router-link to="/about">关于我</router-link></li>
                 <li><router-link to="/login">登录</router-link></li>
             </div>
             <div class="nav-end">
-                <li><a href="">发布</a></li>
+                <li><router-link to="/publish">发布</router-link></li>
             </div>
         </ul>
     </div>

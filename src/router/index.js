@@ -23,6 +23,11 @@ Vue.use(VueRouter)
     name: 'Login',
     component: () => import('../views/Login.vue')
   },
+  {
+    path: '/publish',
+    name: 'Publish',
+    component: () => import('../views/Publish.vue')
+  },
 ]
 
 const router = new VueRouter({

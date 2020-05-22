@@ -250,7 +250,7 @@ $viewsCommentsH = 30px
                     opacity 0
             // 背景阴影
             .article-shadow
-                background-color Silver
+                background-color silver
                 width calc(100% - 30px)
                 border-radius 10px
                 padding-bottom 'calc((100% - 30px)/ %s + %s)' % ($articlePicRatio $avatarTittleTimeH)

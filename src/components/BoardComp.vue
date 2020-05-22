@@ -3,16 +3,15 @@
         <ul>
             <li v-for="item in discourse" :key="item.message">
                 <div class="avatar-name">
-                    <div class="board-avatar">{{item.avatar}}</div>
+                    <div class="board-avatar">
+                        <img :src="item.avatar" alt="头像" width="100%" height="100%">
+                    </div>
                     <div class="board-name">{{item.name}}</div>
                 </div>
-                
-                <div class="time-message">
-                    <div>{{item.time}}</div>
-                    <div>{{item.message}}</div>
+                <div class="message-time">
+                    <div class="board-message">{{item.message}}</div>
+                    <div class="board-time">{{item.time}}</div>
                 </div>
-
-                <div class="demo"></div>
             </li>
         </ul>
     </div>
@@ -25,8 +24,14 @@ export default {
                 {
                     message: 'this is the first message',
                     time: '2020年5月21日',
-                    avatar: '1',
-                    name: 'qinyj'
+                    avatar: require("../assets/avatar/avatar2.png"),
+                    name: 'cat'
+                },
+                {
+                    message: '祝网站早日完工',
+                    time: '2020年5月22日',
+                    avatar: require("../assets/avatar/avatar1.png"),
+                    name: 'dog'
                 }
             ]
         }
@@ -35,60 +40,72 @@ export default {
 </script>
 <style lang="stylus" scoped>
 #boardComp
-    border 1px solid blue
+    // border 1px solid blue
     height 500px
     ul
         list-style none
         padding 0
         margin 0
         li
-            border 1px solid
+            // border 1px solid
             display flex
             margin 10px 0
             height 100px
+            padding 10px
             .avatar-name
-                border 1px solid
                 box-sizing border-box
                 height 100px
                 display flex
                 flex-direction column
                 justify-content space-around
-                padding 10px
+                padding 5px 0
                 .board-avatar
                     width 50px
                     height 50px
-                    border 1px solid
                     box-sizing border-box
                 .board-name
-                    border 1px solid
                     box-sizing border-box
                     width 50px
-            .time-message
-                border 1px solid
-                box-sizing border-box
-                padding 10px
-                height 100px
-                // flex 1
-                display flex
-                flex-direction column
-                text-align left
-            .demo
-                width 150px
-                height 50px
+            .message-time
+                flex 1
                 box-sizing border-box
                 position relative
-                background-color seagreen
-                // border 1px solid
-                border-radius 3px
-                margin 10px 30px
-            .demo:before
+                // background-color rgb(131, 175, 155)
+                border 2px solid rgb(131, 175, 155)
+                border-radius 7px
+                margin 5px 20px
+                display flex
+                flex-direction column
+                .board-message
+                    text-align left
+                    // border 1px solid
+                    font-weight bold
+                    height 60%
+                    padding 5px
+                .board-time
+                    flex 1
+                    text-align right
+                    // border 1px solid
+                    padding 5px
+            .message-time:before
                 content ""
                 position absolute
                 left -20px
                 top calc(50% - 10px)
                 border 10px solid
                 box-sizing border-box
-                border-color transparent seagreen transparent transparent
+                border-color transparent rgb(131, 175, 155) transparent transparent
+                box-sizing border-box
+                width 0px
+                height 0px
+            .message-time:after
+                content ""
+                position absolute
+                left -16px
+                top calc(50% - 10px)
+                border 10px solid
+                box-sizing border-box
+                border-color transparent white transparent transparent
                 box-sizing border-box
                 width 0px
                 height 0px
