@@ -1,7 +1,9 @@
 <template>
     <div id="articleListComp">
         <ul class="all-article">
-            <li v-for="(item, index) in article" :key="item.tittle">
+            <li v-for="(item, index) in article.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
+                :key="item.tittle"
+            >
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">
@@ -42,12 +44,25 @@
                 </div>
             </li>
         </ul>
+        <div class="article-pagination">
+            <el-pagination 
+                layout="prev, pager, next" 
+                background="true"
+                :total="4" 
+                :page-size="pageSize"
+                :current-page="currentPage"
+                @current-change="handleCurrentChange"
+            >
+            </el-pagination>
+        </div>
     </div>
 </template>
 <script>
 export default {
     data() {
         return {
+            pageSize: 1,
+            currentPage: 1,
             article: [
                 {
                     tittle: '我的第一篇文章',
@@ -112,6 +127,9 @@ export default {
             this.$refs.shadow[index].classList.remove('article-shadow-hover');
             this.article[index].showfooter = !this.article[index].showfooter;
             this.$refs.picture[index].classList.remove('article-pic-hover')
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val
         }
     },
 }
@@ -130,6 +148,7 @@ $viewsCommentsH = 30px
         display flex
         flex-wrap wrap
         padding 0
+        border 1px solid
         li
             display inline-block
             width 40%
@@ -264,4 +283,8 @@ $viewsCommentsH = 30px
                 width 100%
                 padding-bottom 'calc((100% - 30px)/ %s + %s + %s + 30px)' % ($articlePicRatio $avatarTittleTimeH $viewsCommentsH)
                 top 0
+    .article-pagination
+        .el-pagination
+            border 1px solid
+            
 </style>
