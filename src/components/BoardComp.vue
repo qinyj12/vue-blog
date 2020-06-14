@@ -1,7 +1,9 @@
 <template>
     <div id="boardComp">
         <ul>
-            <li v-for="item in discourse" :key="item.message">
+            <li v-for="item in discourse.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
+                :key="item.message"
+            >
                 <div class="avatar-name">
                     <div class="board-avatar">
                         <img :src="item.avatar" alt="头像" width="100%" height="100%">
@@ -14,12 +16,24 @@
                 </div>
             </li>
         </ul>
+        <div class="board-pagination">
+            <el-pagination 
+                layout="prev, pager, next"
+                :total="4" 
+                :page-size="pageSize"
+                :current-page="currentPage"
+                @current-change="handleCurrentChange"
+            >
+            </el-pagination>
+        </div>
     </div>
 </template>
 <script>
 export default {
     data() {
         return {
+            pageSize: 3,
+            currentPage: 1,
             discourse: [
                 {
                     message: 'this is the first message',
@@ -32,16 +46,33 @@ export default {
                     time: '2020年5月22日',
                     avatar: require("../assets/avatar/avatar1.png"),
                     name: 'dog'
+                },
+                {
+                    message: '我是第三条评论',
+                    time: '2020年6月14日',
+                    avatar: require("../assets/avatar/avatar1.png"),
+                    name: '第三条'
+                },
+                {
+                    message: '我是第四条评论',
+                    time: '2020年6月14日',
+                    avatar: require("../assets/avatar/avatar1.png"),
+                    name: '第四条'
                 }
             ]
         }
     },
+    methods: {
+        handleCurrentChange(val) {
+            this.currentPage = val
+        }
+    }
 }
 </script>
 <style lang="stylus" scoped>
 #boardComp
     // border 1px solid blue
-    height 500px
+    border 1px solid
     ul
         list-style none
         padding 0

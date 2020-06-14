@@ -47,7 +47,6 @@
         <div class="article-pagination">
             <el-pagination 
                 layout="prev, pager, next" 
-                background="true"
                 :total="4" 
                 :page-size="pageSize"
                 :current-page="currentPage"
@@ -61,7 +60,7 @@
 export default {
     data() {
         return {
-            pageSize: 1,
+            pageSize: 4,
             currentPage: 1,
             article: [
                 {
@@ -283,8 +282,4 @@ $viewsCommentsH = 30px
                 width 100%
                 padding-bottom 'calc((100% - 30px)/ %s + %s + %s + 30px)' % ($articlePicRatio $avatarTittleTimeH $viewsCommentsH)
                 top 0
-    .article-pagination
-        .el-pagination
-            border 1px solid
-            
 </style>
