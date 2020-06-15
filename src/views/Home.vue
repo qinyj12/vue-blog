@@ -21,4 +21,7 @@ components: {
 <style lang="stylus" scoped>
 #home
     display flex
+    // <1000px时纵向排列
+    @media screen and (max-width 1100px)
+        flex-direction column 
 </style>

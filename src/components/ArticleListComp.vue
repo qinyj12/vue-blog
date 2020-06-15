@@ -142,16 +142,20 @@ $viewsCommentsH = 30px
     width 60%
     padding-left 10%
     box-sizing border-box
+    @media screen and (max-width 1100px)
+        width 90%
+
     ul.all-article
         list-style none
         display flex
+        justify-content space-around
         flex-wrap wrap
         padding 0
         border 1px solid
         li
             display inline-block
             width 40%
-            margin 20px 20px 20px 0
+            margin 20px 0
             padding 15px
             position relative
             .picture-abstract
