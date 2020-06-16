@@ -40,4 +40,7 @@ export default {
     width 100%
     top calc(100vh - 56px)
     background-color white
+    
+    @media screen and (max-width 750px)
+      top calc(70vh - 56px)
 </style>

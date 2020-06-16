@@ -11,19 +11,23 @@
                         <div class="article-pic" ref="picture">
                             <img :src="item.articleImg" alt="头图" width="100%" height="100%">
                         </div>
-                        <transition name="abstract-fade">
-                            <div class="article-abstract" v-show="item.showfooter">{{item.abstract}}</div>
-                        </transition>
+                        
                     </div>
                     <div class="avatar-tittle-time">
                         <!-- 这里原来动态绑定了   :style="item.avatar" -->
                         <div class="article-avatar">
                             <img :src="item.avatarImg" alt="头像" width="100%" height="100%">
                         </div>
-                        <div class="tittle-time">
-                            <div class="article-tittle">{{item.tittle}}</div>
-                            <div class="article-time">{{item.time}}</div>
-                        </div>
+
+                        <transition-group name="abstract-fade">
+                            <div class="tittle-time" v-show="!item.showfooter" :key="item.tittle">
+                                <div class="article-tittle">{{item.tittle}}</div>
+                                <div class="article-time">{{item.time}}</div>
+                            </div>
+                            <div class="article-abstract" v-show="item.showfooter" :key="item.abstract">
+                                {{item.abstract}}
+                            </div>
+                        </transition-group>
                     </div>
                     <div class="article-views-comments">
                         <!-- transition-group要绑定key，不然不能区分内部很多元素 -->
@@ -158,6 +162,9 @@ $viewsCommentsH = 30px
             margin 20px 0
             padding 15px
             position relative
+            @media screen and (max-width 750px)
+                width 80%
+
             .picture-abstract
                 width 100%
                 padding-bottom 'calc(100%/ %s)' % $articlePicRatio
@@ -176,33 +183,13 @@ $viewsCommentsH = 30px
                     z-index 1
                 // 头图-hover
                 .article-pic-hover
-                    width 90%
-                    height 90%
-                    // 此处是(1 - 90%) / 2
-                    margin 0 5%
-                    // 此处是50% * 90%
-                    transform translateY(-45%)
-                // 摘要，平时隐藏
-                .article-abstract
-                    position absolute
-                    height 50%
-                    padding 10px 0
-                    box-sizing border-box
-                    text-align left
-                    font-weight bold
-                    color white
-                    bottom 0
-                    z-index 0
-                    overflow hidden
-                    transition all 0.3s
-                // 摘要动画
-                .abstract-fade-enter-active 
-                    transition all 0.3s
-                .abstract-fade-leave-active 
-                    transition all 0.3s
-                .abstract-fade-enter, .abstract-fade-leave-to
-                    transform translateY(10px)
-                    opacity 0
+                    // width 90%
+                    // height 90%
+                    // // 此处是(1 - 90%) / 2
+                    // margin 0 5%
+                    // // 此处是50% * 90%
+                    // transform translateY(-45%)
+
             // 头像-标题-时间
             .avatar-tittle-time
                 width 100%
@@ -219,11 +206,37 @@ $viewsCommentsH = 30px
                     background-size contain
                     background-repeat no-repeat
                     overflow hidden
-                // 标题-时间
-                .tittle-time
-                    margin-left 10px
+                // transition-group会多一个span
+                span
+                    // 因为子元素abstract，所以必须给span一个高度和relative，不然子元素就脱离span了
+                    box-sizing border-box
+                    height 42px
+                    position relative
+                    flex 1
+                    text-align left
                     color white
-                    font-weight bold 
+                    padding-left 10px
+                    // 标题-时间
+                    .tittle-time
+                        font-weight bold
+                    // 摘要，平时隐藏
+                    .article-abstract
+                        height 42px
+                        position absolute
+                        top 0
+                        overflow hidden
+                        font-size 14px
+                    // 摘要动画
+                    .abstract-fade-enter-active 
+                        transition all 0.3s
+                        
+                    .abstract-fade-leave-active 
+                        transition all 0.3s
+                        
+                    .abstract-fade-enter, .abstract-fade-leave-to
+                        transform translateX(-10px)
+                        opacity 0 
+
             // 阅读量-评论量
             .article-views-comments
                 width 100%
