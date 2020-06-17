@@ -1,11 +1,11 @@
 <template>
     <div class="headerComp">
         <div class="artboard">
-            <div class="tittle">
-                <h1 class="tittle-1">汪</h1>
-                <h1 class="tittle-2">喵</h1>
-                <h1 class="tittle-3">工</h1>
-                <h1 class="tittle-4">坊</h1>
+            <div class="title">
+                <h1 class="title-1">汪</h1>
+                <h1 class="title-2">喵</h1>
+                <h1 class="title-3">工</h1>
+                <h1 class="title-4">坊</h1>
             </div>
             <div class="artboard-for-bb8">
                 <div class="bb8">
@@ -101,7 +101,7 @@
     align-items: center;
     justify-content: space-around;
 }
-.tittle {
+.title {
     width: 300px;
     display: flex;
     justify-content: center;
@@ -109,28 +109,28 @@
     z-index: 1;
     color: #eee;
 }
-.tittle > h1 {
+.title > h1 {
     margin: 10px;
     font-size: 50px;
 }
-.tittle-1 {
+.title-1 {
     animation: bounce;
     animation-duration: 2s;
     animation-iteration-count: infinite;
 }
-.tittle-2 {
+.title-2 {
     animation: bounce;
     animation-delay: 0.1s;
     animation-duration: 2s;
     animation-iteration-count: infinite;
 }
-.tittle-3 {
+.title-3 {
     animation: bounce;
     animation-delay: 0.2s;
     animation-duration: 2s;
     animation-iteration-count: infinite;
 }
-.tittle-4 {
+.title-4 {
     animation: bounce;
     animation-delay: 0.3s;
     animation-duration: 2s;

@@ -1,8 +1,8 @@
 <template>
     <div id="articleListComp">
-        <ul class="all-article">
+        <ul class="all-article" ref="articleListRef">
             <li v-for="(item, index) in article.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
-                :key="item.tittle"
+                :key="item.title"
             >
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
@@ -13,15 +13,15 @@
                         </div>
                         
                     </div>
-                    <div class="avatar-tittle-time">
+                    <div class="avatar-title-time">
                         <!-- 这里原来动态绑定了   :style="item.avatar" -->
                         <div class="article-avatar">
                             <img :src="item.avatarImg" alt="头像" width="100%" height="100%">
                         </div>
 
                         <transition-group name="abstract-fade">
-                            <div class="tittle-time" v-show="!item.showfooter" :key="item.tittle">
-                                <div class="article-tittle">{{item.tittle}}</div>
+                            <div class="title-time" v-show="!item.showfooter" :key="item.title">
+                                <div class="article-title">{{item.title}}</div>
                                 <div class="article-time">{{item.time}}</div>
                             </div>
                             <div class="article-abstract" v-show="item.showfooter" :key="item.abstract">
@@ -64,11 +64,11 @@
 export default {
     data() {
         return {
-            pageSize: 4,
+            pageSize: 3,
             currentPage: 1,
             article: [
                 {
-                    tittle: '我的第一篇文章',
+                    title: '我的第一篇文章',
                     abstract: '这是我的第一篇文章，我也不知道写什么。要不就写个自我介绍？',
                     time: '2020年5月16日',
                     views: '100',
@@ -80,7 +80,7 @@ export default {
                     avatarImg: require("../assets/avatar/avatar1.png")
                 },
                 {
-                    tittle: '我的第二篇文章',
+                    title: '我的第二篇文章',
                     abstract: '这是我的第二篇文章，我仍然不知道写什么。要不再自我介绍一遍？',
                     time: '2020年5月17日',
                     views: '50',
@@ -92,7 +92,7 @@ export default {
                     avatarImg: require("../assets/avatar/avatar2.png")
                 },
                 {
-                    tittle: '我的第3篇文章',
+                    title: '我的第3篇文章',
                     abstract: '这是我的第3篇文章，我也不知道写什么。要不就写个自我介绍？',
                     time: '2020年5月16日',
                     views: '100',
@@ -104,7 +104,7 @@ export default {
                     avatarImg: require("../assets/avatar/avatar1.png")
                 },
                 {
-                    tittle: '我的第4篇文章',
+                    title: '我的第4篇文章',
                     abstract: '这是我的第4篇文章，我仍然不知道写什么。要不再自我介绍一遍？',
                     time: '2020年5月17日',
                     views: '50',
@@ -120,17 +120,22 @@ export default {
             count: 0
         }
     },
+    mounted: function() {
+        // 固定articlelist的高度,防止子元素减少时高度坍缩
+        let articleHeight = this.$refs.articleListRef.offsetHeight;
+        this.$refs.articleListRef.style.height = articleHeight + 'px';
+    },
     methods: {
+        // 鼠标hover时的动画
         isHover(index) {
             this.$refs.shadow[index].classList.add('article-shadow-hover');
-            this.article[index].showfooter = !this.article[index].showfooter;
-            this.$refs.picture[index].classList.add('article-pic-hover')
+            this.article[index].showfooter = !this.article[index].showfooter
         },
         noHover(index) {
             this.$refs.shadow[index].classList.remove('article-shadow-hover');
-            this.article[index].showfooter = !this.article[index].showfooter;
-            this.$refs.picture[index].classList.remove('article-pic-hover')
+            this.article[index].showfooter = !this.article[index].showfooter
         },
+        // 供el-pagination切换页码时使用
         handleCurrentChange(val) {
             this.currentPage = val
         }
@@ -138,9 +143,9 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-// 长宽比1.7:1，avatar-tittle-time高度60，views-comments高度30
+// 长宽比1.7:1，avatar-title-time高度60，views-comments高度30
 $articlePicRatio = 1.7
-$avatarTittleTimeH = 60px
+$avatartitleTimeH = 60px
 $viewsCommentsH = 30px
 #articleListComp
     width 60%
@@ -152,15 +157,16 @@ $viewsCommentsH = 30px
     ul.all-article
         list-style none
         display flex
-        justify-content space-around
+        justify-content flex-start
         flex-wrap wrap
         padding 0
         border 1px solid
         li
             display inline-block
             width 40%
-            margin 20px 0
             padding 15px
+            // 这里妄图通过百分比margin来达到space-around的效果
+            margin 15px 2.5%
             position relative
             @media screen and (max-width 750px)
                 width 80%
@@ -181,19 +187,11 @@ $viewsCommentsH = 30px
                     overflow hidden
                     transition all 0.3s
                     z-index 1
-                // 头图-hover
-                .article-pic-hover
-                    // width 90%
-                    // height 90%
-                    // // 此处是(1 - 90%) / 2
-                    // margin 0 5%
-                    // // 此处是50% * 90%
-                    // transform translateY(-45%)
 
             // 头像-标题-时间
-            .avatar-tittle-time
+            .avatar-title-time
                 width 100%
-                height $avatarTittleTimeH
+                height $avatartitleTimeH
                 position relative
                 z-index 1
                 display flex
@@ -217,7 +215,7 @@ $viewsCommentsH = 30px
                     color white
                     padding-left 10px
                     // 标题-时间
-                    .tittle-time
+                    .title-time
                         font-weight bold
                     // 摘要，平时隐藏
                     .article-abstract
@@ -229,10 +227,8 @@ $viewsCommentsH = 30px
                     // 摘要动画
                     .abstract-fade-enter-active 
                         transition all 0.3s
-                        
                     .abstract-fade-leave-active 
                         transition all 0.3s
-                        
                     .abstract-fade-enter, .abstract-fade-leave-to
                         transform translateX(-10px)
                         opacity 0 
@@ -288,7 +284,7 @@ $viewsCommentsH = 30px
                 background-color silver
                 width calc(100% - 30px)
                 border-radius 10px
-                padding-bottom 'calc((100% - 30px)/ %s + %s)' % ($articlePicRatio $avatarTittleTimeH)
+                padding-bottom 'calc((100% - 30px)/ %s + %s)' % ($articlePicRatio $avatartitleTimeH)
                 position absolute
                 top 30px
                 right 0
@@ -297,6 +293,6 @@ $viewsCommentsH = 30px
             // 背景阴影-hover
             .article-shadow-hover
                 width 100%
-                padding-bottom 'calc((100% - 30px)/ %s + %s + %s + 30px)' % ($articlePicRatio $avatarTittleTimeH $viewsCommentsH)
+                padding-bottom 'calc((100% - 30px)/ %s + %s + %s + 30px)' % ($articlePicRatio $avatartitleTimeH $viewsCommentsH)
                 top 0
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div id="boardComp">
-        <ul>
+        <ul ref="boardRef">
             <li v-for="item in discourse.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
                 :key="item.message"
             >
@@ -62,6 +62,10 @@ export default {
             ]
         }
     },
+    mounted: function() {
+        let boardHeight = this.$refs.boardRef.offsetHeight;
+        this.$refs.boardRef.style.height = boardHeight + 'px'
+    },
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val
@@ -71,14 +75,11 @@ export default {
 </script>
 <style lang="stylus" scoped>
 #boardComp
-    // border 1px solid blue
-    border 1px solid
     ul
         list-style none
         padding 0
         margin 0
         li
-            // border 1px solid
             display flex
             margin 10px 0
             height 100px
