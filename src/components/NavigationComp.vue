@@ -33,17 +33,26 @@
                 width 60%
                 padding-left 10%
                 box-sizing border-box
+                @media screen and (max-width 700px)
+                    width 80%
+                    padding-left 0
             .nav-end
                 width 40%
                 padding-right 10%
                 box-sizing border-box
                 justify-content flex-end
+                @media screen and (max-width 700px)
+                    display none
             div
                 display flex
+                @media screen and (max-width 700px)
+                    justify-content space-around
                 li
                     *
                         font-size 18px
                         text-decoration none
                         color black
                         margin 0 20px
+                        @media screen and (max-width 700px)
+                            margin 0
 </style>

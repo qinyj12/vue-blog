@@ -166,7 +166,7 @@ $viewsCommentsH = 30px
             width 40%
             padding 15px
             // 这里妄图通过百分比margin来达到space-around的效果
-            margin 15px 2.5%
+            margin 15px 2%
             position relative
             @media screen and (max-width 750px)
                 width 80%
