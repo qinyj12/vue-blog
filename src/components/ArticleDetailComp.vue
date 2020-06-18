@@ -11,9 +11,21 @@
                     <div class="leave-name">{{leaveComment.name}}</div>
                 </div>
                 <div class="leave-comment">
-                    <textarea class="write-comment"></textarea>
+                    <el-input
+                        type="textarea"
+                        :autosize="{minRows:4}"
+                        placeholder="说点什么吧"
+                        v-model="commentArea"
+                        maxlength="100"
+                        show-word-limit
+                    >
+                    </el-input>
                 </div>
             </div>
+            <div class="leave-button">
+                <el-button type="success" :disabled="buttonDisabled">发送</el-button>
+            </div>
+
             <!-- 这里是展示评论的 -->
             <ul class="comments-list">
                 <li v-for="item in comments" :key="item.comment">
@@ -36,6 +48,7 @@
 export default {
     data() {
         return {
+            commentArea: '',
             comments: [
                 {
                     comment: 'this is the first message',
@@ -56,10 +69,24 @@ export default {
             }
         }
     },
+    computed: {
+        // 判断输入的评论是否全是空格，如果是不可点击确定
+        buttonDisabled: function () {
+            if (this.commentArea.split(" ").join("").length != 0) {
+                return false
+            } else {
+                return true
+            }
+        }
+    },
 }
 </script>
 <style lang="stylus" scoped>
 #articleDetailComp
+    width 100%
+    display flex
+    flex-direction column
+    align-items center
     .article-detail, .article-comments
         border-radius 5px
         padding 40px
@@ -67,11 +94,13 @@ export default {
         box-sizing border-box
         width 892px
         box-shadow 8px 14px 38px rgba(39,44,49,.06), 1px 3px 8px rgba(39,44,49,.03)
+        @media screen and (max-width 1000px)
+            width 90%
+            padding 20px
+            
         .leave
-            box-sizing border-box
             padding 10px
             display flex
-            min-height 115px
             .leave-avatar-name
                 width 50px
                 height 50px
@@ -79,11 +108,12 @@ export default {
                 box-sizing border-box
                 padding 5px
                 flex 1
-                textarea.write-comment
-                    border-radius 5px
-                    height 50px
-                    width 100%
-                    resize none
+
+        .leave-button
+            padding-right 10px
+            display flex
+            justify-content flex-end
+        
         ul.comments-list
             list-style none
             padding 0

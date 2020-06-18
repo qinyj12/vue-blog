@@ -1,5 +1,6 @@
 <template>
     <div id="boardComp">
+        <!-- 留言板内容 -->
         <ul ref="boardRef">
             <li v-for="item in discourse.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
                 :key="item.message"
@@ -16,6 +17,7 @@
                 </div>
             </li>
         </ul>
+        <!-- 留言板页码 -->
         <div class="board-pagination">
             <el-pagination 
                 layout="prev, pager, next"
@@ -26,6 +28,30 @@
             >
             </el-pagination>
         </div>
+        <!-- demo -->
+        <div class="demo">
+            <div class="avatar-name">
+                <div class="board-avatar">
+                    <img src="../assets/avatar/avatar1.png" alt="头像" width="100%" height="100%">
+                </div>
+                <div class="board-name">dog</div>
+            </div>
+            <div class="message-time">
+                <!-- 发布留言 -->
+                <div class="leave-board">
+                    <el-input
+                        type="textarea"
+                        :autosize="{minRows:4}"
+                        placeholder="说点什么吧"
+                        v-model="boardArea"
+                        maxlength="100"
+                        show-word-limit
+                    >
+                    </el-input>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 <script>
@@ -80,6 +106,7 @@ export default {
         padding 0
         margin 0
         li
+            border 1px solid
             display flex
             margin 10px 0
             height 100px
@@ -102,8 +129,7 @@ export default {
                 flex 1
                 box-sizing border-box
                 position relative
-                // background-color rgb(131, 175, 155)
-                border 2px solid rgb(131, 175, 155)
+                border 1.5px solid rgb(131, 175, 155)
                 border-radius 7px
                 margin 5px 20px
                 display flex
@@ -119,6 +145,8 @@ export default {
                     text-align right
                     // border 1px solid
                     padding 5px
+                    
+            // 用来形成对话框的尖角 
             .message-time:before
                 content ""
                 position absolute
@@ -133,7 +161,7 @@ export default {
             .message-time:after
                 content ""
                 position absolute
-                left -16px
+                left -18px
                 top calc(50% - 10px)
                 border 10px solid
                 box-sizing border-box
@@ -141,5 +169,56 @@ export default {
                 box-sizing border-box
                 width 0px
                 height 0px
+    .demo
+        display flex
+        margin 10px 0
+        height 100px
+        padding 10px
+        .avatar-name
+            box-sizing border-box
+            height 100px
+            display flex
+            flex-direction column
+            justify-content space-around
+            padding 5px 0
+            .board-avatar
+                width 50px
+                height 50px
+                box-sizing border-box
+            .board-name
+                box-sizing border-box
+                width 50px
+        .message-time
+            flex 1
+            box-sizing border-box
+            position relative
+            border 1.5px solid rgb(131, 175, 155)
+            border-radius 7px
+            margin 5px 20px
+            display flex
+            flex-direction column                
+        // 用来形成对话框的尖角 
+        .message-time:before
+            content ""
+            position absolute
+            left -20px
+            top calc(50% - 10px)
+            border 10px solid
+            box-sizing border-box
+            border-color transparent rgb(131, 175, 155) transparent transparent
+            box-sizing border-box
+            width 0px
+            height 0px
+        .message-time:after
+            content ""
+            position absolute
+            left -18px
+            top calc(50% - 10px)
+            border 10px solid
+            box-sizing border-box
+            border-color transparent white transparent transparent
+            box-sizing border-box
+            width 0px
+            height 0px
 
 </style>

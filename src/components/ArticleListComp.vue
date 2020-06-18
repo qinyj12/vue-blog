@@ -160,7 +160,6 @@ $viewsCommentsH = 30px
         justify-content flex-start
         flex-wrap wrap
         padding 0
-        border 1px solid
         li
             display inline-block
             width 40%

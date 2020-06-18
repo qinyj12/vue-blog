@@ -1,6 +1,9 @@
 <template>
-    <div class="loginPage">
-        <loginComp/>
+    <div id="login">
+        <vue-scroll>
+            <loginComp/>
+        </vue-scroll>
+        
     </div>
 </template>
 <script>
@@ -12,9 +15,12 @@
     }
 </script>
 <style lang="stylus" scoped>
-    .loginPage
-        display flex
-        flex-direction column
-        justify-content center
-        align-items center
+    #login
+        
+        ::-webkit-scrollbar
+            width 0 !important
+        ::-webkit-scrollbar
+            width: 0 !important
+            height: 0        
+
 </style>

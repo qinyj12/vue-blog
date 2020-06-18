@@ -1,6 +1,6 @@
 <template>
     <!-- 最外层盒子，用于存放组件 -->
-    <div>
+    <div id="loginComp">
         <!-- 组件 -->
         <div class="login-box">
             <div class="bar">
@@ -74,20 +74,27 @@ export default {
  
 </style>
 <style lang="stylus" scoped>
-*
-    padding 0
+#loginComp
+    padding 20px
     margin 0
-
+    @media screen and (max-width 800px)
+        transform scale(0.9, 0.9)
+    @media screen and (max-width 550px)
+        transform scale(0.8, 0.8)
+        transform-origin 0 center
+    
     // 组件外框架
     .login-box
         width 768px
         height 480px
+        margin 0 auto
         display flex
         background-image url('../assets/background/animalcrossing2.png')
         background-size cover
         border-radius 15px
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
         overflow-x hidden
+
         // 组件分成左右两半
         .bar
             width 50%
