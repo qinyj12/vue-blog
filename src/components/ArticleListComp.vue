@@ -5,7 +5,10 @@
                 :key="item.title"
             >
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
-                <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
+                <div 
+                    @mouseenter="isHover(index)" 
+                    @mouseleave="noHover(index)"
+                >
                     <div class="picture-abstract">
                         <!-- 这里原来动态绑定了   :style="item.articlePic" -->
                         <div class="article-pic" ref="picture">
@@ -20,11 +23,11 @@
                         </div>
 
                         <transition-group name="abstract-fade">
-                            <div class="title-time" v-show="!item.showfooter" :key="item.title">
+                            <div class="title-time" v-show="true" :key="item.title" ref="titleAndTime">
                                 <div class="article-title">{{item.title}}</div>
                                 <div class="article-time">{{item.time}}</div>
                             </div>
-                            <div class="article-abstract" v-show="item.showfooter" :key="item.abstract">
+                            <div class="article-abstract" v-show="false" :key="item.abstract" ref="abstract">
                                 {{item.abstract}}
                             </div>
                         </transition-group>
@@ -33,12 +36,12 @@
                         <!-- transition-group要绑定key，不然不能区分内部很多元素 -->
                         <transition-group name="views-comments-fade">
                             <!-- 这里动态决定了哪些 li > div 会显示 -->
-                            <div class="article-views" v-show="item.showfooter" :key="item.views">
+                            <div class="article-views" v-show="false" :key="item.views" ref="articleViews">
                                 <div class="views-icon"></div>
                                 <div class="number">{{item.views}}</div>
                             </div>
                             <!-- 这里动态决定了哪些 li > div 会显示 -->
-                            <div class="article-comments" v-show="item.showfooter" :key="item.comments">
+                            <div class="article-comments" v-show="false" :key="item.comments" ref="articleComments">
                                 <div class="comments-icon"></div>
                                 <div class="number">{{item.comments}}</div>
                             </div>
@@ -64,7 +67,7 @@
 export default {
     data() {
         return {
-            pageSize: 3,
+            pageSize: 2,
             currentPage: 1,
             article: [
                 {
@@ -73,7 +76,6 @@ export default {
                     time: '2020年5月16日',
                     views: '100',
                     comments: '5',
-                    showfooter: false,
                     articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic.jpg"),
                     avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"},
@@ -85,7 +87,6 @@ export default {
                     time: '2020年5月17日',
                     views: '50',
                     comments: '3',
-                    showfooter: false,
                     articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic2.jpg"),
                     avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"},
@@ -97,7 +98,6 @@ export default {
                     time: '2020年5月16日',
                     views: '100',
                     comments: '5',
-                    showfooter: false,
                     articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic.jpg"),
                     avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"},
@@ -109,7 +109,6 @@ export default {
                     time: '2020年5月17日',
                     views: '50',
                     comments: '3',
-                    showfooter: false,
                     articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic2.jpg"),
                     avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"},
@@ -127,13 +126,28 @@ export default {
     },
     methods: {
         // 鼠标hover时的动画
-        isHover(index) {
+        isHover(index) {            
             this.$refs.shadow[index].classList.add('article-shadow-hover');
-            this.article[index].showfooter = !this.article[index].showfooter
+
+            setTimeout(() => {
+                this.$refs.titleAndTime[index].style.display = 'none';
+                this.$refs.abstract[index].style.display = 'block';
+                this.$refs.articleViews[index].style.display = 'flex';
+                this.$refs.articleComments[index].style.display = 'flex'                
+            }, 100);
+
         },
         noHover(index) {
+            // console.log(index)
             this.$refs.shadow[index].classList.remove('article-shadow-hover');
-            this.article[index].showfooter = !this.article[index].showfooter
+
+            setTimeout(() => {
+                this.$refs.titleAndTime[index].style.display = 'block';
+                this.$refs.abstract[index].style.display = 'none';
+                this.$refs.articleViews[index].style.display = 'none';
+                this.$refs.articleComments[index].style.display = 'none';                
+            }, 100);
+
         },
         // 供el-pagination切换页码时使用
         handleCurrentChange(val) {
@@ -150,9 +164,11 @@ $viewsCommentsH = 30px
 #articleListComp
     width 60%
     padding-left 10%
-    box-sizing border-box
+    flex-direction column
     @media screen and (max-width 1100px)
         width 90%
+        padding-left 0
+        margin 0 auto
 
     ul.all-article
         list-style none
@@ -169,6 +185,9 @@ $viewsCommentsH = 30px
             position relative
             @media screen and (max-width 750px)
                 width 80%
+            @media screen and (max-width 500px)
+                width 90%
+                margin 5px 0
 
             .picture-abstract
                 width 100%
@@ -206,7 +225,6 @@ $viewsCommentsH = 30px
                 // transition-group会多一个span
                 span
                     // 因为子元素abstract，所以必须给span一个高度和relative，不然子元素就脱离span了
-                    box-sizing border-box
                     height 42px
                     position relative
                     flex 1
@@ -223,14 +241,14 @@ $viewsCommentsH = 30px
                         top 0
                         overflow hidden
                         font-size 14px
-                    // 摘要动画
-                    .abstract-fade-enter-active 
-                        transition all 0.3s
-                    .abstract-fade-leave-active 
-                        transition all 0.3s
-                    .abstract-fade-enter, .abstract-fade-leave-to
-                        transform translateX(-10px)
-                        opacity 0 
+                // 摘要动画
+                .abstract-fade-enter-active 
+                    transition all 0.3s
+                .abstract-fade-leave-active 
+                    transition all 0.3s
+                .abstract-fade-enter, .abstract-fade-leave-to
+                    transform translateX(-10px)
+                    opacity 0 
 
             // 阅读量-评论量
             .article-views-comments
@@ -240,36 +258,39 @@ $viewsCommentsH = 30px
                 z-index 1
                 display flex
                 align-items center
-                // 阅读量, 评论量
-                .article-views, .article-comments
-                    height 20px
-                    border-radius 3px
-                    background-color black
-                    color white
-                    margin 0 5px
-                    display flex
-                    flex-direction row
-                    align-items center
                 // transition-group会多一个span
                 span 
                     display flex
-                    // 阅读量图标,评论图标
-                    .views-icon, .comments-icon
-                        margin 0 3px
-                        width 20px
+                    
+                    // 阅读量, 评论量
+                    .article-views, .article-comments
                         height 20px
-                        background-size contain
-                    // 阅读量图标
-                    .views-icon
-                        background-image url('../assets/icon/eye.png')
-                        background-repeat no-repeat
-                    // 评论图标
-                    .comments-icon
-                        background-image url('../assets/icon/comment.png')
-                        background-repeat no-repeat
-                    // 阅读和评论的数字
-                    .number
-                        margin 0 3px
+                        border-radius 3px
+                        background-color black
+                        color white
+                        margin 0 5px
+                        display flex
+                        flex-direction row
+                        align-items center
+
+                        // 阅读量图标,评论图标
+                        .views-icon, .comments-icon
+                            margin 0 3px
+                            width 20px
+                            height 20px
+                            background-size contain
+                        // 阅读量图标
+                        .views-icon
+                            background-image url('../assets/icon/eye.png')
+                            background-repeat no-repeat
+                        // 评论图标
+                        .comments-icon
+                            background-image url('../assets/icon/comment.png')
+                            background-repeat no-repeat
+                        // 阅读和评论的数字
+                        .number
+                            margin 0 3px
+
                 // 阅读-评论的动画
                 .views-comments-fade-enter-active 
                     transition all 0.3s
@@ -278,6 +299,7 @@ $viewsCommentsH = 30px
                 .views-comments-fade-enter, .views-comments-fade-leave-to
                     transform translateX(10px)
                     opacity 0
+            
             // 背景阴影
             .article-shadow
                 background-color silver

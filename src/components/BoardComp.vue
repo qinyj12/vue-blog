@@ -41,7 +41,6 @@
                 <div class="leave-board">
                     <el-input
                         type="textarea"
-                        :autosize="{minRows:4}"
                         placeholder="说点什么吧"
                         v-model="boardArea"
                         maxlength="100"
@@ -60,6 +59,7 @@ export default {
         return {
             pageSize: 3,
             currentPage: 1,
+            boardArea: '',
             discourse: [
                 {
                     message: 'this is the first message',
@@ -106,7 +106,6 @@ export default {
         padding 0
         margin 0
         li
-            border 1px solid
             display flex
             margin 10px 0
             height 100px
@@ -221,4 +220,16 @@ export default {
             width 0px
             height 0px
 
+</style>
+<style lang="stylus">
+.leave-board
+    padding 5px
+    height 100%
+    .el-textarea
+        height 100%
+        .el-textarea__inner
+            height 100%
+            padding 0
+            border 0
+            resize none
 </style>
