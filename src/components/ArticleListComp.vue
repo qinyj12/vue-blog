@@ -1,7 +1,8 @@
 <template>
     <div id="articleListComp">
         <ul class="all-article" ref="articleListRef">
-            <li v-for="(item, index) in article.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
+            <li 
+                v-for="(item, index) in article.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
                 :key="item.title"
             >
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
@@ -10,24 +11,22 @@
                     @mouseleave="noHover(index)"
                 >
                     <div class="picture-abstract">
-                        <!-- 这里原来动态绑定了   :style="item.articlePic" -->
                         <div class="article-pic" ref="picture">
                             <img :src="item.articleImg" alt="头图" width="100%" height="100%">
                         </div>
                         
                     </div>
                     <div class="avatar-title-time">
-                        <!-- 这里原来动态绑定了   :style="item.avatar" -->
                         <div class="article-avatar">
                             <img :src="item.avatarImg" alt="头像" width="100%" height="100%">
                         </div>
 
                         <transition-group name="abstract-fade">
-                            <div class="title-time" v-show="true" :key="item.title" ref="titleAndTime">
+                            <div class="title-time" v-show="!(index === currentIndex)" :key="item.title">
                                 <div class="article-title">{{item.title}}</div>
                                 <div class="article-time">{{item.time}}</div>
                             </div>
-                            <div class="article-abstract" v-show="false" :key="item.abstract" ref="abstract">
+                            <div class="article-abstract" v-show="(index === currentIndex)" :key="item.abstract">
                                 {{item.abstract}}
                             </div>
                         </transition-group>
@@ -36,12 +35,12 @@
                         <!-- transition-group要绑定key，不然不能区分内部很多元素 -->
                         <transition-group name="views-comments-fade">
                             <!-- 这里动态决定了哪些 li > div 会显示 -->
-                            <div class="article-views" v-show="false" :key="item.views" ref="articleViews">
+                            <div class="article-views" v-show="(index === currentIndex)" :key="item.views">
                                 <div class="views-icon"></div>
                                 <div class="number">{{item.views}}</div>
                             </div>
                             <!-- 这里动态决定了哪些 li > div 会显示 -->
-                            <div class="article-comments" v-show="false" :key="item.comments" ref="articleComments">
+                            <div class="article-comments" v-show="(index === currentIndex)" :key="item.comments">
                                 <div class="comments-icon"></div>
                                 <div class="number">{{item.comments}}</div>
                             </div>
@@ -69,6 +68,8 @@ export default {
         return {
             pageSize: 2,
             currentPage: 1,
+            // 获取鼠标hover的index
+            currentIndex: null,
             article: [
                 {
                     title: '我的第一篇文章',
@@ -76,9 +77,7 @@ export default {
                     time: '2020年5月16日',
                     views: '100',
                     comments: '5',
-                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic.jpg"),
-                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"},
                     avatarImg: require("../assets/avatar/avatar1.png")
                 },
                 {
@@ -87,9 +86,7 @@ export default {
                     time: '2020年5月17日',
                     views: '50',
                     comments: '3',
-                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic2.jpg"),
-                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"},
                     avatarImg: require("../assets/avatar/avatar2.png")
                 },
                 {
@@ -98,9 +95,7 @@ export default {
                     time: '2020年5月16日',
                     views: '100',
                     comments: '5',
-                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic.jpg"),
-                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar1.png")+")"},
                     avatarImg: require("../assets/avatar/avatar1.png")
                 },
                 {
@@ -109,14 +104,10 @@ export default {
                     time: '2020年5月17日',
                     views: '50',
                     comments: '3',
-                    articlePic: {backgroundImage: "url(" + require("../assets/article_pic/article-pic2.jpg")+")"},
                     articleImg: require("../assets/article_pic/article-pic2.jpg"),
-                    avatar: {backgroundImage: "url(" + require("../assets/avatar/avatar2.png")+")"},
                     avatarImg: require("../assets/avatar/avatar2.png")
                 },
             ],
-            value: 'white',
-            count: 0
         }
     },
     mounted: function() {
@@ -126,28 +117,14 @@ export default {
     },
     methods: {
         // 鼠标hover时的动画
-        isHover(index) {            
+        isHover(index) {
             this.$refs.shadow[index].classList.add('article-shadow-hover');
-
-            setTimeout(() => {
-                this.$refs.titleAndTime[index].style.display = 'none';
-                this.$refs.abstract[index].style.display = 'block';
-                this.$refs.articleViews[index].style.display = 'flex';
-                this.$refs.articleComments[index].style.display = 'flex'                
-            }, 100);
-
+            this.currentIndex = index;
         },
         noHover(index) {
             // console.log(index)
             this.$refs.shadow[index].classList.remove('article-shadow-hover');
-
-            setTimeout(() => {
-                this.$refs.titleAndTime[index].style.display = 'block';
-                this.$refs.abstract[index].style.display = 'none';
-                this.$refs.articleViews[index].style.display = 'none';
-                this.$refs.articleComments[index].style.display = 'none';                
-            }, 100);
-
+            this.currentIndex = null;
         },
         // 供el-pagination切换页码时使用
         handleCurrentChange(val) {

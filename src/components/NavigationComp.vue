@@ -22,7 +22,7 @@
         background-color rgba(255,255,255,0.95)
         box-shadow 0 2px 1px #eee
         z-index 3
-        margin-bottom 100px
+        margin-bottom 50px
         ul
             width 100%
             list-style none
