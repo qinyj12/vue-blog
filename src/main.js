@@ -8,12 +8,14 @@ import animate from 'animate.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import vuescroll from 'vuescroll'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(animate);
 Vue.use(mavonEditor)
-Vue.use(vuescroll); // install the vuescroll first
+Vue.use(vuescroll)
 Vue.prototype.$vuescrollConfig = {
   bar: {
     background: 'seagreen',
@@ -25,6 +27,7 @@ Vue.prototype.$vuescrollConfig = {
     keepShow: true
   }
 };
+Vue.use(VueAxios, axios)
 
 new Vue({
   router,
