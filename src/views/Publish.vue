@@ -50,14 +50,7 @@ export default {
         },
         // 保存md
         saveMavon(value) {
-            // 跨域发送cookie
-            this.axios.defaults.withCredentials = true;
-            let data = new FormData();
-            data.append('title', this.title);
-            data.append('abstract', this.abstract);
-            data.append('avatar', this.chosenAvatar);
-            data.append('content', value);
-            this.axios.post('http://127.0.0.1:5000/savearticle', data).then(response => {console.log(response)})
+
 
             console.log(value);
             const h = this.$createElement;
@@ -71,12 +64,26 @@ export default {
                     if (action === "confirm") {
                         instance.confirmButtonLoading = true;
                         instance.confirmButtonText = "保存中...";
-                        setTimeout(() => {
-                            done();
-                            // setTimeout(() => {
-                            //     instance.confirmButtonLoading = false;
-                            // }, 300);
-                        }, 1000);
+                        // 跨域发送cookie
+                        this.axios.defaults.withCredentials = true;
+                        let data = new FormData();
+                        data.append('title', this.title);
+                        data.append('abstract', this.abstract);
+                        data.append('avatar', this.chosenAvatar);
+                        data.append('content', value);
+                        this.axios
+                            .post('http://127.0.0.1:5000/savearticle', data)
+                                .then(response => {
+                                        console.log(response);
+                                        done()
+                                    }
+                                )
+                        // setTimeout(() => {
+                        //     done();
+                        //     // setTimeout(() => {
+                        //     //     instance.confirmButtonLoading = false;
+                        //     // }, 300);
+                        // }, 1000);
                     } else {
                         done();
                     }
@@ -102,6 +109,11 @@ export default {
             text-align: left;
             margin-bottom: 20px;
         }
+
+        .el-switch {
+            display: flex;
+        }
+
         ul {
             list-style: none;
             padding: 0;
