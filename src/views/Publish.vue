@@ -1,5 +1,8 @@
 <template>
     <div id="publish">
+        <p>
+            <button @click="testApi">test</button>
+        </p>
         <p>标题</p>
         <!-- 此处输入标题 -->
         <el-input type="text" placeholder="标题" v-model="title" maxlength="20" show-word-limit></el-input>
@@ -42,16 +45,21 @@ export default {
         });
     },
     methods: {
-        
         // 选择头像
         chooseAvatar(index) {
             this.chooseWhichAvatar = index;
             this.chosenAvatar = this.avatarList[this.chooseWhichAvatar]
         },
+        // 测试后端接口
+        testApi() {
+            this.axios.post('http://127.0.0.1:5000/hello')
+                .then(response => {
+                    console.log(response);
+                    alert(response.msg)
+                })
+        },
         // 保存md
         saveMavon(value) {
-
-
             console.log(value);
             const h = this.$createElement;
             this.$msgbox({
