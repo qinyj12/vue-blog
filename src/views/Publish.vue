@@ -3,8 +3,8 @@
         <p>
             <button @click="testApi">test</button>
         </p>
-        <p>标题</p>
         <!-- 此处输入标题 -->
+        <p>标题</p>
         <el-input type="text" placeholder="标题" v-model="title" maxlength="20" show-word-limit></el-input>
         <!-- 此处选择是否输入摘要 -->
         <p>摘要</p>
@@ -21,6 +21,19 @@
                 <i class="chosen-icon" ref="avatarChosen" :class="{'if-chosen': index !== chooseWhichAvatar}"></i>
             </li>
         </ul>
+        <!-- 此处选择封面图 -->
+        <p>封面图</p>        
+        <el-upload
+            class="cover-uploader"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+        >
+            <img v-if="imageUrl" :src="imageUrl" class="cover">
+            <i v-else class="el-icon-plus cover-uploader-icon"></i>
+        </el-upload>
+        <!-- 此处是撰写正文 -->
         <p>正文</p>
         <mavon-editor @save="saveMavon" />
     </div>
@@ -34,7 +47,8 @@ export default {
             title: "",
             avatarList: [],
             chooseWhichAvatar: "",
-            chosenAvatar: ''
+            chosenAvatar: '',
+            imageUrl: ''
         };
     },
     mounted() {
@@ -57,6 +71,21 @@ export default {
                     console.log(response);
                     alert(response.msg)
                 })
+        },
+        handleAvatarSuccess(res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
         },
         // 保存md
         saveMavon(value) {
@@ -86,12 +115,6 @@ export default {
                                         done()
                                     }
                                 )
-                        // setTimeout(() => {
-                        //     done();
-                        //     // setTimeout(() => {
-                        //     //     instance.confirmButtonLoading = false;
-                        //     // }, 300);
-                        // }, 1000);
                     } else {
                         done();
                     }
@@ -113,7 +136,7 @@ export default {
     #publish {
         box-sizing: border-box;
         padding: 50px;
-        * {
+        *:not(.cover-uploader-icon):not(.cover):not(.chosen-icon) {
             text-align: left;
             margin-bottom: 20px;
         }
@@ -162,4 +185,32 @@ export default {
             z-index: 0;
         }
     }
+</style>
+<style lang="stylus">
+.cover-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    
+}
+.cover-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.cover-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+}
+.cover {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
 </style>
