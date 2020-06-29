@@ -21,7 +21,7 @@
                             <el-input placeholder="请输入邮箱" v-model="email" clearable></el-input>
                             <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
                             <p>忘记密码啦？</p>
-                            <el-button type="success" round :loading="false">登录</el-button>
+                            <el-button type="success" round :loading="false" @click="confirmLogin">登录</el-button>
                         </div>
                     </div>
                 </transition>
@@ -62,6 +62,15 @@ export default {
         }
     },
     methods: {
+        confirmLogin() {
+            let data = new FormData;
+            data.append('email', this.email);
+            data.append('password', this.password);
+            this.axios.post('http://127.0.0.1:5000/login', data)
+                .then(response => {
+                    console.log(response.data)
+                })
+        }
     },
 }
 </script>

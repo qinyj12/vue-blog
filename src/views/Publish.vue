@@ -25,12 +25,12 @@
         <p>封面图</p>        
         <el-upload
             class="cover-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://127.0.0.1:5000/savecover"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
         >
-            <img v-if="imageUrl" :src="imageUrl" class="cover">
+            <img v-if="tempImageUrl" :src="tempImageUrl" class="cover">
             <i v-else class="el-icon-plus cover-uploader-icon"></i>
         </el-upload>
         <!-- 此处是撰写正文 -->
@@ -39,16 +39,19 @@
     </div>
 </template>
 <script>
+
 export default {
     data() {
         return {
             ifWriteAbstract: false,
-            abstract: "",
-            title: "",
+            abstract: null,
+            title: null,
             avatarList: [],
-            chooseWhichAvatar: "",
-            chosenAvatar: '',
-            imageUrl: ''
+            chooseWhichAvatar: null,
+            chosenAvatar: null,
+            tempImageUrl: null,
+            tempImageName: null,
+            articleContent: null
         };
     },
     mounted() {
@@ -59,37 +62,55 @@ export default {
         });
     },
     methods: {
-        // 选择头像
-        chooseAvatar(index) {
-            this.chooseWhichAvatar = index;
-            this.chosenAvatar = this.avatarList[this.chooseWhichAvatar]
-        },
         // 测试后端接口
         testApi() {
             this.axios.post('http://127.0.0.1:5000/hello')
                 .then(response => {
                     console.log(response);
-                    alert(response.msg)
+                    alert(response.data.msg)
                 })
         },
+        // 选择头像
+        chooseAvatar(index) {
+            this.chooseWhichAvatar = index;
+            this.chosenAvatar = this.avatarList[this.chooseWhichAvatar]
+        },
+        // 上传封面图
         handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
+            this.tempImageUrl = URL.createObjectURL(file.raw);
+            this.tempImageName = res.result
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
             const isLt2M = file.size / 1024 / 1024 < 2;
-
             if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG 格式!');
+                this.$message.error('上传头像图片只能是 JPG 格式!');
             }
             if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!');
+                this.$message.error('上传头像图片大小不能超过 2MB!');
             }
             return isJPG && isLt2M;
         },
+        // 定义一个保存博客的方法
+        saveArticle() {
+            if (this.title && this.abstract && this.chosenAvatar && this.articleContent && this.tempImageName) {
+                // 跨域发送cookie
+                this.axios.defaults.withCredentials = true;
+                let data = new FormData();
+                data.append('title', this.title);
+                data.append('abstract', this.abstract);
+                data.append('avatar', this.chosenAvatar);
+                data.append('content', this.articleContent);
+                data.append('cover', this.tempImageName);
+                return this.axios.post('http://127.0.0.1:5000/savearticle', data)
+            } else {
+                return '不能为空'
+            }
+
+        },
         // 保存md
         saveMavon(value) {
-            console.log(value);
+            let that = this;
             const h = this.$createElement;
             this.$msgbox({
                 title: "保存",
@@ -97,24 +118,22 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-                beforeClose: (action, instance, done) => {
+                beforeClose: async (action, instance, done) => {
                     if (action === "confirm") {
+                        this.articleContent = value;
                         instance.confirmButtonLoading = true;
                         instance.confirmButtonText = "保存中...";
-                        // 跨域发送cookie
-                        this.axios.defaults.withCredentials = true;
-                        let data = new FormData();
-                        data.append('title', this.title);
-                        data.append('abstract', this.abstract);
-                        data.append('avatar', this.chosenAvatar);
-                        data.append('content', value);
-                        this.axios
-                            .post('http://127.0.0.1:5000/savearticle', data)
-                                .then(response => {
-                                        console.log(response);
-                                        done()
-                                    }
-                                )
+                        try {
+                            let response = await that.saveArticle();
+                            console.log(response);
+                            instance.confirmButtonLoading = false;
+                            done()
+                        } catch {
+                            console.log('出错了');
+                            instance.confirmButtonLoading = false;
+                            instance.confirmButtonText = "确定";
+                        }
+
                     } else {
                         done();
                     }

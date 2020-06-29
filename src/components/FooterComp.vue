@@ -21,10 +21,28 @@
         <!--Header ends-->
         <div class="content">
             <p>by DogDogDog</p>
+            <p>{{currentUser}}</p>
         </div>
     </div>
 </template>
-
+<script>
+export default {
+  data() {
+    return {
+      currentUser: '未登录',
+    }
+  },
+  mounted() {
+    this.axios.defaults.withCredentials = true;
+    this.axios.post('http://127.0.0.1:5000/getsession')
+      .then(response => {
+        console.log(response.data);
+        this.currentUser = response.data.result
+      })
+    
+  },
+}
+</script>
 <style scoped>
 * {
     margin: 0;
