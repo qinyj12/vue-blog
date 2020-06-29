@@ -51,6 +51,7 @@ export default {
             chosenAvatar: null,
             tempImageUrl: null,
             tempImageName: null,
+            ifTempImgSuccess: false,
             articleContent: null
         };
     },
@@ -73,12 +74,16 @@ export default {
         // 选择头像
         chooseAvatar(index) {
             this.chooseWhichAvatar = index;
-            this.chosenAvatar = this.avatarList[this.chooseWhichAvatar]
+            this.chosenAvatar = this.avatarList[this.chooseWhichAvatar];
         },
         // 上传封面图
         handleAvatarSuccess(res, file) {
-            this.tempImageUrl = URL.createObjectURL(file.raw);
-            this.tempImageName = res.result
+            if (res.status == 200) {
+                this.tempImageUrl = URL.createObjectURL(file.raw);
+                this.tempImageName = res.result;
+            } else {
+                alert(res.result)
+            }
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
@@ -99,7 +104,7 @@ export default {
                 let data = new FormData();
                 data.append('title', this.title);
                 data.append('abstract', this.abstract);
-                data.append('avatar', this.chosenAvatar);
+                data.append('avatar', this.chosenAvatar.replace("img/", ""));
                 data.append('content', this.articleContent);
                 data.append('cover', this.tempImageName);
                 return this.axios.post('http://127.0.0.1:5000/savearticle', data)
@@ -125,7 +130,7 @@ export default {
                         instance.confirmButtonText = "保存中...";
                         try {
                             let response = await that.saveArticle();
-                            console.log(response);
+                            console.log(response.data);
                             instance.confirmButtonLoading = false;
                             done()
                         } catch {

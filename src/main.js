@@ -23,7 +23,7 @@ Vue.prototype.$vuescrollConfig = {
     keepShow: true,
   },
   rail: {
-     gutterOfSide: '2px',
+    gutterOfSide: '2px',
     keepShow: true
   }
 };
