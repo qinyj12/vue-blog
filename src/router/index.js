@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+// import ArticleDetailComp from '../components/ArticleListComp.vue'
 
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
     name: 'Home',
@@ -28,6 +29,9 @@ Vue.use(VueRouter)
     name: 'Publish',
     component: () => import('../views/Publish.vue')
   },
+  {
+    path: '/article/:article_id', component: () => import('../views/About.vue')
+  }
 ]
 
 const router = new VueRouter({

@@ -36,6 +36,7 @@
         <!-- 此处是撰写正文 -->
         <p>正文</p>
         <mavon-editor @save="saveMavon" />
+        {{temp_1}}
     </div>
 </template>
 <script>
@@ -52,7 +53,8 @@ export default {
             tempImageUrl: null,
             tempImageName: null,
             ifTempImgSuccess: false,
-            articleContent: null
+            articleContent: null,
+            temp_1:''
         };
     },
     mounted() {
@@ -115,44 +117,47 @@ export default {
         },
         // 保存md
         saveMavon(value) {
-            let that = this;
-            const h = this.$createElement;
-            this.$msgbox({
-                title: "保存",
-                message: h("p", null, "确定保存吗"),
-                showCancelButton: true,
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                beforeClose: async (action, instance, done) => {
-                    if (action === "confirm") {
-                        this.articleContent = value;
-                        instance.confirmButtonLoading = true;
-                        instance.confirmButtonText = "保存中...";
-                        try {
-                            let response = await that.saveArticle();
-                            console.log(response.data);
-                            instance.confirmButtonLoading = false;
-                            done()
-                        } catch {
-                            console.log('出错了');
-                            instance.confirmButtonLoading = false;
-                            instance.confirmButtonText = "确定";
-                        }
-
-                    } else {
-                        done();
-                    }
-                }
-            }).then(action => {
-                this.$message({
-                    type: "info",
-                    message: "action: " + action
-                });
-            }).catch(()=>{
-                // 点击取消
-                console.log("cancel")
-            })
+            this.temp_1 = value
         }
+        // saveMavon(value) {
+        //     let that = this;
+        //     const h = this.$createElement;
+        //     this.$msgbox({
+        //         title: "保存",
+        //         message: h("p", null, "确定保存吗"),
+        //         showCancelButton: true,
+        //         confirmButtonText: "确定",
+        //         cancelButtonText: "取消",
+        //         beforeClose: async (action, instance, done) => {
+        //             if (action === "confirm") {
+        //                 this.articleContent = value;
+        //                 instance.confirmButtonLoading = true;
+        //                 instance.confirmButtonText = "保存中...";
+        //                 try {
+        //                     let response = await that.saveArticle();
+        //                     console.log(response.data);
+        //                     instance.confirmButtonLoading = false;
+        //                     done()
+        //                 } catch {
+        //                     console.log('出错了');
+        //                     instance.confirmButtonLoading = false;
+        //                     instance.confirmButtonText = "确定";
+        //                 }
+
+        //             } else {
+        //                 done();
+        //             }
+        //         }
+        //     }).then(action => {
+        //         this.$message({
+        //             type: "info",
+        //             message: "action: " + action
+        //         });
+        //     }).catch(()=>{
+        //         // 点击取消
+        //         console.log("cancel")
+        //     })
+        // }
     }
 };
 </script>

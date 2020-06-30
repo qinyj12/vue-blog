@@ -1,7 +1,7 @@
 <template>
     <div id="articleDetailComp">
         <!-- 这里是文章 -->
-        <div class="article-detail">基本信息</div>
+        <div class="article-detail">{{articleDetail}}</div>
         <!-- 这里是评论区 -->
         <div class="article-comments">
             <!-- 这是是发布评论 -->
@@ -48,6 +48,7 @@
 export default {
     data() {
         return {
+            articleDetail: '',
             commentArea: '',
             comments: [
                 {
@@ -67,6 +68,20 @@ export default {
                 avatar: require("../assets/avatar/avatar1.png"),
                 name: 'dog'
             }
+        }
+    },
+    mounted() {
+        // 从哪个路由进来的，带进来的article_id是多少
+        let articleId = this.$route.params.article_id;
+        // 调用函数，带article_id为参数
+        this.getArticleDetail(articleId)
+    },
+    methods: {
+        // 定义一个拿到article_id的正文的函数
+        getArticleDetail(id) {
+            this.axios.get('http://127.0.0.1:5000/article/'+id).then(resp => {
+                this.articleDetail = resp.data.result
+            })
         }
     },
     computed: {

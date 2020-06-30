@@ -36,7 +36,7 @@ export default {
     this.axios.defaults.withCredentials = true;
     this.axios.post('http://127.0.0.1:5000/getsession')
       .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         this.currentUser = response.data.result
       })
     

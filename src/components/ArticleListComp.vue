@@ -1,32 +1,27 @@
 <template>
     <div id="articleListComp">
         <ul class="all-article" ref="articleListRef">
-            <li 
-                v-for="(item, index) in article.slice((currentPage-1)*pageSize, currentPage*pageSize)" 
-                :key="item.title"
-            >
+            <li v-for="(item, index) in articleList" :key="item.id+'id'">
+                <!-- 放一个router-link做动态路由，点击后进入对应的文章详情 -->
+                <router-link :to="'/article/'+item.id">
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
-                <div 
-                    @mouseenter="isHover(index)" 
-                    @mouseleave="noHover(index)"
-                >
+                <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">
                         <div class="article-pic" ref="picture">
-                            <img :src="item.articleImg" alt="头图" width="100%" height="100%">
+                            <img :src="'http://127.0.0.1:5000/static/images/covers/'+'['+item.id+']'+item.cover" alt="头图" class="cover">
                         </div>
-                        
                     </div>
                     <div class="avatar-title-time">
                         <div class="article-avatar">
-                            <img :src="item.avatarImg" alt="头像" width="100%" height="100%">
+                            <img :src="'./img/'+item.avatar" alt="头像" width="100%" height="100%">
                         </div>
 
                         <transition-group name="abstract-fade">
-                            <div class="title-time" v-show="!(index === currentIndex)" :key="item.title">
+                            <div class="title-time" v-show="!(index === currentIndex)" :key="item.title+'title'">
                                 <div class="article-title">{{item.title}}</div>
                                 <div class="article-time">{{item.time}}</div>
                             </div>
-                            <div class="article-abstract" v-show="(index === currentIndex)" :key="item.abstract">
+                            <div class="article-abstract" v-show="(index === currentIndex)" :key="item.abstract+'abstract'">
                                 {{item.abstract}}
                             </div>
                         </transition-group>
@@ -35,12 +30,12 @@
                         <!-- transition-group要绑定key，不然不能区分内部很多元素 -->
                         <transition-group name="views-comments-fade">
                             <!-- 这里动态决定了哪些 li > div 会显示 -->
-                            <div class="article-views" v-show="(index === currentIndex)" :key="item.views">
+                            <div class="article-views" v-show="(index === currentIndex)" :key="item.views+'views'">
                                 <div class="views-icon"></div>
                                 <div class="number">{{item.views}}</div>
                             </div>
                             <!-- 这里动态决定了哪些 li > div 会显示 -->
-                            <div class="article-comments" v-show="(index === currentIndex)" :key="item.comments">
+                            <div class="article-comments" v-show="(index === currentIndex)" :key="item.comments+'comments'">
                                 <div class="comments-icon"></div>
                                 <div class="number">{{item.comments}}</div>
                             </div>
@@ -48,12 +43,13 @@
                     </div>
                     <div class="article-shadow" ref="shadow"></div>
                 </div>
+                </router-link>
             </li>
         </ul>
         <div class="article-pagination">
             <el-pagination 
                 layout="prev, pager, next" 
-                :total="4" 
+                :total="articleCounts" 
                 :page-size="pageSize"
                 :current-page="currentPage"
                 @current-change="handleCurrentChange"
@@ -66,69 +62,51 @@
 export default {
     data() {
         return {
+            // el-pagination的参数，前者是每页有多少元素，后者是当前所在页
             pageSize: 2,
             currentPage: 1,
+            articleCounts: null,
+            // 从后端拿到的articlelist
+            articleList: [],
             // 获取鼠标hover的index
-            currentIndex: null,
-            article: [
-                {
-                    title: '我的第一篇文章',
-                    abstract: '这是我的第一篇文章，我也不知道写什么。要不就写个自我介绍？',
-                    time: '2020年5月16日',
-                    views: '100',
-                    comments: '5',
-                    articleImg: require("../assets/article_pic/article-pic.jpg"),
-                    avatarImg: require("../assets/avatar/avatar1.png")
-                },
-                {
-                    title: '我的第二篇文章',
-                    abstract: '这是我的第二篇文章，我仍然不知道写什么。要不再自我介绍一遍？',
-                    time: '2020年5月17日',
-                    views: '50',
-                    comments: '3',
-                    articleImg: require("../assets/article_pic/article-pic2.jpg"),
-                    avatarImg: require("../assets/avatar/avatar2.png")
-                },
-                {
-                    title: '我的第3篇文章',
-                    abstract: '这是我的第3篇文章，我也不知道写什么。要不就写个自我介绍？',
-                    time: '2020年5月16日',
-                    views: '100',
-                    comments: '5',
-                    articleImg: require("../assets/article_pic/article-pic.jpg"),
-                    avatarImg: require("../assets/avatar/avatar1.png")
-                },
-                {
-                    title: '我的第4篇文章',
-                    abstract: '这是我的第4篇文章，我仍然不知道写什么。要不再自我介绍一遍？',
-                    time: '2020年5月17日',
-                    views: '50',
-                    comments: '3',
-                    articleImg: require("../assets/article_pic/article-pic2.jpg"),
-                    avatarImg: require("../assets/avatar/avatar2.png")
-                },
-            ],
+            currentIndex: null
         }
     },
-    mounted: function() {
-        // 固定articlelist的高度,防止子元素减少时高度坍缩
-        let articleHeight = this.$refs.articleListRef.offsetHeight;
-        this.$refs.articleListRef.style.height = articleHeight + 'px';
+    mounted: async function() {
+        // 拿到axios的返回值，因为返回对象是一个promise，所以要用.then来拿到值，并且通过await达到阻塞的效果，似乎也不是完全的阻塞？
+        let res = this.getArticle();
+        await res;
+        this.getUlHeight()
     },
+
     methods: {
+        // 定义一个拿到后端article列表的函数
+        getArticle() {
+            let data = new FormData();
+            let slicePage = [(this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize];
+            data.append('articles_for_single', JSON.stringify(slicePage));
+            return this.axios.post('http://127.0.0.1:5000/getarticle', data).then(r => {
+                this.articleList = r.data.result.articleList;
+                this.articleCounts = r.data.result.count
+            })
+        },
+        // 定义一个拿到ul高度的函数
+        getUlHeight() {
+            this.$refs.articleListRef.style.height = this.$refs.articleListRef.offsetHeight + 'px';
+        },
         // 鼠标hover时的动画
         isHover(index) {
             this.$refs.shadow[index].classList.add('article-shadow-hover');
             this.currentIndex = index;
         },
         noHover(index) {
-            // console.log(index)
             this.$refs.shadow[index].classList.remove('article-shadow-hover');
             this.currentIndex = null;
         },
         // 供el-pagination切换页码时使用
         handleCurrentChange(val) {
-            this.currentPage = val
+            this.currentPage = val;
+            this.getArticle()
         }
     },
 }
@@ -182,6 +160,9 @@ $viewsCommentsH = 30px
                     overflow hidden
                     transition all 0.3s
                     z-index 1
+                    // 封面
+                    .cover
+                        width 100%
 
             // 头像-标题-时间
             .avatar-title-time
