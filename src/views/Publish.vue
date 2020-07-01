@@ -36,10 +36,11 @@
         <!-- 此处是撰写正文 -->
         <p>正文</p>
         <mavon-editor @save="saveMavon" />
-        {{temp_1}}
+        <div v-html="temp_1" class="markdown-body"></div>
     </div>
 </template>
 <script>
+let marked = require('marked');
 
 export default {
     data() {
@@ -54,7 +55,8 @@ export default {
             tempImageName: null,
             ifTempImgSuccess: false,
             articleContent: null,
-            temp_1:''
+            temp_1:'',
+            temp_2: ''
         };
     },
     mounted() {
@@ -116,8 +118,11 @@ export default {
 
         },
         // 保存md
-        saveMavon(value) {
-            this.temp_1 = value
+        saveMavon(value, render) {
+            console.log(value);
+            console.log(marked(value));
+            console.log(render);
+            this.temp_1 = render;
         }
         // saveMavon(value) {
         //     let that = this;
