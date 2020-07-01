@@ -1,7 +1,9 @@
 <template>
     <div id="articleDetailComp">
         <!-- 这里是文章 -->
-        <div class="article-detail">{{articleDetail}}</div>
+        <div class="article-detail">
+            <div v-html="articleDetail"></div>
+        </div>
         <!-- 这里是评论区 -->
         <div class="article-comments">
             <!-- 这是是发布评论 -->

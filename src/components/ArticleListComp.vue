@@ -8,7 +8,7 @@
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">
                         <div class="article-pic" ref="picture">
-                            <img :src="'http://127.0.0.1:5000/static/images/covers/'+'['+item.id+']'+item.cover" alt="头图" class="cover">
+                            <img :src="'http://127.0.0.1:5000/static/articles/'+item.id+'/'+item.cover" alt="头图" class="cover">
                         </div>
                     </div>
                     <div class="avatar-title-time">

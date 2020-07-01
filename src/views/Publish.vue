@@ -22,7 +22,7 @@
             </li>
         </ul>
         <!-- 此处选择封面图 -->
-        <p>封面图</p>        
+        <p>封面图</p>
         <el-upload
             class="cover-uploader"
             action="http://127.0.0.1:5000/savecover"
@@ -36,11 +36,9 @@
         <!-- 此处是撰写正文 -->
         <p>正文</p>
         <mavon-editor @save="saveMavon" />
-        {{temp_1}}
     </div>
 </template>
 <script>
-
 export default {
     data() {
         return {
@@ -53,8 +51,8 @@ export default {
             tempImageUrl: null,
             tempImageName: null,
             ifTempImgSuccess: false,
-            articleContent: null,
-            temp_1:''
+            articleMd: null,
+            articleHtml: null
         };
     },
     mounted() {
@@ -100,14 +98,15 @@ export default {
         },
         // 定义一个保存博客的方法
         saveArticle() {
-            if (this.title && this.abstract && this.chosenAvatar && this.articleContent && this.tempImageName) {
+            if (this.title && this.abstract && this.chosenAvatar && this.articleMd && this.tempImageName && this.articleHtml) {
                 // 跨域发送cookie
                 this.axios.defaults.withCredentials = true;
                 let data = new FormData();
                 data.append('title', this.title);
                 data.append('abstract', this.abstract);
                 data.append('avatar', this.chosenAvatar.replace("img/", ""));
-                data.append('content', this.articleContent);
+                data.append('content_md', this.articleMd);
+                data.append('content_html', this.articleHtml);
                 data.append('cover', this.tempImageName);
                 return this.axios.post('http://127.0.0.1:5000/savearticle', data)
             } else {
@@ -116,48 +115,46 @@ export default {
 
         },
         // 保存md
-        saveMavon(value) {
-            this.temp_1 = value
-        }
-        // saveMavon(value) {
-        //     let that = this;
-        //     const h = this.$createElement;
-        //     this.$msgbox({
-        //         title: "保存",
-        //         message: h("p", null, "确定保存吗"),
-        //         showCancelButton: true,
-        //         confirmButtonText: "确定",
-        //         cancelButtonText: "取消",
-        //         beforeClose: async (action, instance, done) => {
-        //             if (action === "confirm") {
-        //                 this.articleContent = value;
-        //                 instance.confirmButtonLoading = true;
-        //                 instance.confirmButtonText = "保存中...";
-        //                 try {
-        //                     let response = await that.saveArticle();
-        //                     console.log(response.data);
-        //                     instance.confirmButtonLoading = false;
-        //                     done()
-        //                 } catch {
-        //                     console.log('出错了');
-        //                     instance.confirmButtonLoading = false;
-        //                     instance.confirmButtonText = "确定";
-        //                 }
+        saveMavon(value, render) {
+            let that = this;
+            const h = this.$createElement;
+            this.$msgbox({
+                title: "保存",
+                message: h("p", null, "确定保存吗"),
+                showCancelButton: true,
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                beforeClose: async (action, instance, done) => {
+                    if (action === "confirm") {
+                        this.articleMd = value;
+                        this.articleHtml = render;
+                        instance.confirmButtonLoading = true;
+                        instance.confirmButtonText = "保存中...";
+                        try {
+                            let response = await that.saveArticle();
+                            console.log(response.data);
+                            instance.confirmButtonLoading = false;
+                            done()
+                        } catch {
+                            console.log('出错了');
+                            instance.confirmButtonLoading = false;
+                            instance.confirmButtonText = "确定";
+                        }
 
-        //             } else {
-        //                 done();
-        //             }
-        //         }
-        //     }).then(action => {
-        //         this.$message({
-        //             type: "info",
-        //             message: "action: " + action
-        //         });
-        //     }).catch(()=>{
-        //         // 点击取消
-        //         console.log("cancel")
-        //     })
-        // }
+                    } else {
+                        done();
+                    }
+                }
+            }).then(action => {
+                this.$message({
+                    type: "info",
+                    message: "action: " + action
+                });
+            }).catch(()=>{
+                // 点击取消
+                console.log("cancel")
+            })
+        }
     }
 };
 </script>
