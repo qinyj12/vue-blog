@@ -1,9 +1,7 @@
 <template>
     <div id="articleDetailComp">
         <!-- 这里是文章 -->
-        <div class="article-detail">
-            <div v-html="articleDetail"></div>
-        </div>
+        <div class="article-detail markdown-body" v-html="articleDetail"></div>
         <!-- 这里是评论区 -->
         <div class="article-comments">
             <!-- 这是是发布评论 -->
@@ -157,4 +155,8 @@ export default {
                         padding 5px
                     .list-comment
                         flex 1
+</style>
+<style lang="stylus">
+// 引入mavon-editor定义的css，而且还要给模板语法的class改成markdown-body，不然很多md方言无法渲染
+@import '../../node_modules/mavon-editor/dist/css/index.css'
 </style>

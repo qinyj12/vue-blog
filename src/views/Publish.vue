@@ -35,7 +35,7 @@
         </el-upload>
         <!-- 此处是撰写正文 -->
         <p>正文</p>
-        <mavon-editor @save="saveMavon" />
+        <mavon-editor @save="saveMavon" @imgAdd="$imgAdd"/>
     </div>
 </template>
 <script>
@@ -112,7 +112,6 @@ export default {
             } else {
                 return '不能为空'
             }
-
         },
         // 保存md
         saveMavon(value, render) {
@@ -154,6 +153,19 @@ export default {
                 // 点击取消
                 console.log("cancel")
             })
+        },
+        // 保存md的图片
+        $imgAdd(filename, imgfile) {
+            console.log(imgfile);
+            // let clone = Object.assign({}, imgfile);
+            // clone._name = filename;
+
+            let data = new FormData;
+            data.append('img', imgfile);
+            
+            this.axios.post('http://127.0.0.1:5000/saveimg').then(res => (console.log(res)))
+            // imgfile.name = filename;
+            // console.log(imgfile);
         }
     }
 };
