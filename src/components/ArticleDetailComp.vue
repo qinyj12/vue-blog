@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="leave-button">
-                <el-button type="success" :disabled="buttonDisabled">发送</el-button>
+                <el-button type="success" @click="sendComment($route.params.article_id)" :disabled="buttonDisabled">发送</el-button>
             </div>
 
             <!-- 这里是展示评论的 -->
@@ -82,6 +82,10 @@ export default {
             this.axios.get('http://127.0.0.1:5000/article/'+id).then(resp => {
                 this.articleDetail = resp.data.result
             })
+        },
+        // 定义一个发布评论的函数
+        sendComment(val) {
+            console.log(val)
         }
     },
     computed: {

@@ -35,7 +35,7 @@
         </el-upload>
         <!-- 此处是撰写正文 -->
         <p>正文</p>
-        <mavon-editor @save="saveMavon" @imgAdd="$imgAdd"/>
+        <mavon-editor @save="saveMavon" @imgAdd="$imgAdd" @imgDel="$imgDel" ref="mavonEditor"/>
     </div>
 </template>
 <script>
@@ -155,17 +155,34 @@ export default {
             })
         },
         // 保存md的图片
-        $imgAdd(filename, imgfile) {
-            console.log(imgfile);
-            // let clone = Object.assign({}, imgfile);
-            // clone._name = filename;
-
+        $imgAdd(pos, $file) {
+            // 第一步.将图片上传到服务器.
+            var formdata = new FormData();
+            formdata.append('image', $file);
+            this.axios({
+                url: 'http://127.0.0.1:5000/saveimg',
+                method: 'post',
+                data: formdata,
+                headers: { 'Content-Type': 'multipart/form-data' },
+            }).then((res) => {
+                // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                /**
+                * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+                * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+                * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+                */
+                console.log(res.data);
+                this.$refs.mavonEditor.$img2Url(pos, 'http://127.0.0.1:5000/'+res.data.result)}
+            )
+        },
+        // 删除md图片
+        $imgDel(filename) {
+            // console.log(filename);
+            let url = filename[0];
             let data = new FormData;
-            data.append('img', imgfile);
-            
-            this.axios.post('http://127.0.0.1:5000/saveimg').then(res => (console.log(res)))
-            // imgfile.name = filename;
-            // console.log(imgfile);
+            data.append('imgUrl', url);
+            this.axios.post('http://127.0.0.1:5000/deleteimg',data).then(res => {console.log(res.data)})
+
         }
     }
 };
