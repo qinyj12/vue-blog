@@ -2,6 +2,7 @@
     <div id="articleDetailComp">
         <!-- 这里是文章 -->
         <div class="article-detail markdown-body" v-html="articleDetail"></div>
+        {{commentsList}}
         <!-- 这里是评论区 -->
         <div class="article-comments">
             <!-- 这是是发布评论 -->
@@ -28,15 +29,15 @@
 
             <!-- 这里是展示评论的 -->
             <ul class="comments-list">
-                <li v-for="item in comments" :key="item.comment">
+                <li v-for="item in commentsList" :key="item.content">
                     <el-divider></el-divider>
                     <div class="avatar-time-comment">
                         <div class="list-avatar">
-                            <img :src="item.avatar" alt="头像" width="100%" height="100%">
+                            <img :src='require("../assets/avatar/avatar2.png")' alt="头像" width="100%" height="100%">
                         </div>
                         <div class="time-comment">
                             <div class="list-time">{{item.time}}</div>
-                            <div class="list-comment">{{item.comment}}</div>
+                            <div class="list-comment">{{item.content}}</div>
                         </div>
                     </div>
                 </li>
@@ -50,6 +51,7 @@ export default {
         return {
             articleDetail: '',
             commentArea: '',
+            commentsList: '',
             comments: [
                 {
                     comment: 'this is the first message',
@@ -74,7 +76,8 @@ export default {
         // 从哪个路由进来的，带进来的article_id是多少
         let articleId = this.$route.params.article_id;
         // 调用函数，带article_id为参数
-        this.getArticleDetail(articleId)
+        this.getArticleDetail(articleId);
+        this.getComments(articleId).then(resp => {this.commentsList = resp.data.result})
     },
     methods: {
         // 定义一个拿到article_id的正文的函数
@@ -86,6 +89,12 @@ export default {
         // 定义一个发布评论的函数
         sendComment(val) {
             console.log(val)
+        },
+        getComments(articleId) {
+            let data = new FormData();
+            let slicePage = [0, 4];
+            data.append('comments_for_single', JSON.stringify(slicePage));
+            return this.axios.post('http://127.0.0.1:5000/comments/'+articleId, data)
         }
     },
     computed: {
