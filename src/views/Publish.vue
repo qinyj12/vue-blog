@@ -131,7 +131,7 @@ export default {
                         instance.confirmButtonText = "保存中...";
                         try {
                             let response = await that.saveArticle();
-                            console.log(response.data);
+                            console.log(response);
                             instance.confirmButtonLoading = false;
                             done()
                         } catch {

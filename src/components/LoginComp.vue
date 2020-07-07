@@ -44,7 +44,7 @@
                             <el-input placeholder="请输入邮箱" v-model="email" clearable></el-input>
                             <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
                             <p>不想注册嘛？</p>
-                            <el-button type="warning" round :loading="false">注册</el-button>
+                            <el-button type="warning" round :loading="false" @click="confirmSignup">注册</el-button>
                         </div>
                     </div>
                 </transition>
@@ -70,6 +70,9 @@ export default {
                 .then(response => {
                     console.log(response.data)
                 })
+        },
+        confirmSignup() {
+            console.log('还没有写')
         }
     },
 }
