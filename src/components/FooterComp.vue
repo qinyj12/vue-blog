@@ -26,6 +26,7 @@
     </div>
 </template>
 <script>
+import store from '../store'
 export default {
   data() {
     return {
@@ -34,14 +35,8 @@ export default {
     }
   },
   mounted() {
-    this.axios.defaults.withCredentials = true;
-    this.axios.post('http://127.0.0.1:5000/getsession')
-      .then(response => {
-        console.log(response.data.result);
-        this.currentUser = response.data.result;
-        this.userAvatar = response.data.result.avatar
-      })
-    
+      store.commit('getCurrentUserInfo');
+      console.log(store.state.currentUserAvatar);
   },
 }
 </script>

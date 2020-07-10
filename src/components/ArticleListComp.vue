@@ -3,7 +3,7 @@
         <ul class="all-article" ref="articleListRef">
             <li v-for="(item, index) in articleList" :key="item.id+'id'">
                 <!-- 放一个router-link做动态路由，点击后进入对应的文章详情 -->
-                <router-link :to="'/article/'+item.id">
+                <router-link :to="'/article/'+item.id" style="text-decoration: none">
                 <!-- 只是用来赋值方法的，所以才创建了这个父元素 -->
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">

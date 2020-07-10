@@ -2,7 +2,7 @@
     <div id="articleDetailComp">
         <!-- 这里是文章 -->
         <div class="article-detail markdown-body" v-html="articleDetail"></div>
-        {{commentsList}}
+
         <!-- 这里是评论区 -->
         <div class="article-comments">
             <!-- 这是是发布评论 -->
@@ -29,15 +29,16 @@
 
             <!-- 这里是展示评论的 -->
             <ul class="comments-list">
-                <li v-for="item in commentsList" :key="item.content">
+                <li v-for="item in commentsList" :key="item.comment">
                     <el-divider></el-divider>
                     <div class="avatar-time-comment">
                         <div class="list-avatar">
-                            <img :src='require("../assets/avatar/avatar2.png")' alt="头像" width="100%" height="100%">
+                            <img :src='item.user_avatar' alt="头像" width="100%" height="100%">
+                            <div>{{item.user_name}}</div>
                         </div>
                         <div class="time-comment">
                             <div class="list-time">{{item.time}}</div>
-                            <div class="list-comment">{{item.content}}</div>
+                            <div class="list-comment">{{item.comment}}</div>
                         </div>
                     </div>
                 </li>
@@ -52,20 +53,6 @@ export default {
             articleDetail: '',
             commentArea: '',
             commentsList: '',
-            comments: [
-                {
-                    comment: 'this is the first message',
-                    time: '2020年5月21日',
-                    avatar: require("../assets/avatar/avatar2.png"),
-                    name: 'cat'
-                },
-                {
-                    comment: 'this is the second message',
-                    time: '2020年5月22日',
-                    avatar: require("../assets/avatar/avatar1.png"),
-                    name: 'dog'
-                }
-            ],
             leaveComment: {
                 avatar: require("../assets/avatar/avatar1.png"),
                 name: 'dog'
@@ -77,7 +64,7 @@ export default {
         let articleId = this.$route.params.article_id;
         // 调用函数，带article_id为参数
         this.getArticleDetail(articleId);
-        this.getComments(articleId).then(resp => {this.commentsList = resp.data.result})
+        this.getComments(articleId).then(resp => {this.commentsList = resp.data})
     },
     methods: {
         // 定义一个拿到article_id的正文的函数
@@ -115,6 +102,7 @@ export default {
     display flex
     flex-direction column
     align-items center
+    text-align left
     .article-detail, .article-comments
         border-radius 5px
         padding 40px
