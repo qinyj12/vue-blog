@@ -8,8 +8,8 @@
             <!-- 这是是发布评论 -->
             <div class="leave">
                 <div class="leave-avatar-name">
-                    <img :src="leaveComment.avatar" alt="头像" width="100%" height="100%">
-                    <div class="leave-name">{{leaveComment.name}}</div>
+                    <img :src="currentUser.avatar" alt="头像" width="100%" height="100%">
+                    <div class="leave-name">{{currentUser.name}}</div>
                 </div>
                 <div class="leave-comment">
                     <el-input
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="leave-button">
-                <el-button type="success" @click="sendComment($route.params.article_id)" :disabled="buttonDisabled">发送</el-button>
+                <el-button type="success" @click="sendComment()" :disabled="buttonDisabled">发送</el-button>
             </div>
 
             <!-- 这里是展示评论的 -->
@@ -43,28 +43,36 @@
                     </div>
                 </li>
             </ul>
+            <el-pagination 
+                layout="prev, pager, next" 
+                :total="4" 
+                :page-size="2"
+                :current-page="1"
+                @current-change="handleCurrentChange"
+            >
+            </el-pagination>
         </div>
     </div>
 </template>
 <script>
+import store from '../store';
 export default {
     data() {
         return {
             articleDetail: '',
             commentArea: '',
             commentsList: '',
-            leaveComment: {
-                avatar: require("../assets/avatar/avatar1.png"),
-                name: 'dog'
+            currentUser: {
+                name: '',
+                avatar: ''
             }
         }
     },
     mounted() {
-        // 从哪个路由进来的，带进来的article_id是多少
-        let articleId = this.$route.params.article_id;
-        // 调用函数，带article_id为参数
-        this.getArticleDetail(articleId);
-        this.getComments(articleId).then(resp => {this.commentsList = resp.data})
+        this.getArticleDetail(this.$route.params.article_id);
+        this.getComments(this.$route.params.article_id).then(resp => {this.commentsList = resp.data});
+        this.currentUser.name = store.state.currentUserName
+        this.currentUser.avatar = store.state.currentUserAvatar
     },
     methods: {
         // 定义一个拿到article_id的正文的函数
@@ -74,14 +82,22 @@ export default {
             })
         },
         // 定义一个发布评论的函数
-        sendComment(val) {
-            console.log(val)
+        sendComment() {
+            let data = new FormData();
+            data.append('article_id', this.$route.params.article_id);
+            data.append('comment', this.commentArea);
+            data.append('usid', store.state.currentUserId);
+            this.axios.post('http://127.0.0.1:5000/sendcomment', data).then(resp => {console.log(resp)})
         },
         getComments(articleId) {
             let data = new FormData();
             let slicePage = [0, 4];
             data.append('comments_for_single', JSON.stringify(slicePage));
             return this.axios.post('http://127.0.0.1:5000/comments/'+articleId, data)
+        },
+        // 这是element-pagination的函数
+        handleCurrentChange() {
+            alert('switch')
         }
     },
     computed: {

@@ -12,6 +12,7 @@
   </div>
 </template>
 <script>
+import store from './store'
 import HeaderComp from '@/components/HeaderComp2.vue';
 import NavigationComp from '@/components/NavigationComp.vue';
 import FooterComp from '@/components/FooterComp.vue'
@@ -20,7 +21,32 @@ export default {
         HeaderComp,
         NavigationComp,
         FooterComp
-    }
+    },
+    created() {
+        //在页面刷新时将vuex里的信息保存到sessionStorage里
+        window.addEventListener("beforeunload",()=>{
+            sessionStorage.setItem("store",JSON.stringify(store.state))
+        });
+
+        //在页面加载时读取sessionStorage里的状态信息
+        if (sessionStorage.getItem("store")) {
+            store.replaceState(Object.assign({}, store.state,JSON.parse(sessionStorage.getItem("store"))));
+            // console.log(sessionStorage.store)
+        } else {
+            // console.log(sessionStorage.store)
+        }
+    },
+    mounted() {
+        this.axios.defaults.withCredentials = true;
+        this.axios.post('http://127.0.0.1:5000/getsession').then(resp => {
+            if (resp.data.status == 200) {
+                console.log('登录成功');
+                store.commit('getCurrentUserInfo', resp.data.result)
+            } else {
+                console.log('先登录哦')
+            }
+        })
+    },
 }
 </script>
 <style lang="stylus" scope>

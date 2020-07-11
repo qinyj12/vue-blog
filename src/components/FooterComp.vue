@@ -21,22 +21,14 @@
         <!--Header ends-->
         <div class="content">
             <p>by DogDogDog</p>
-            <p>{{currentUser}}</p>
         </div>
     </div>
 </template>
 <script>
-import store from '../store'
 export default {
   data() {
     return {
-      currentUser: '未登录',
-      userAvatar: ''
     }
-  },
-  mounted() {
-      store.commit('getCurrentUserInfo');
-      console.log(store.state.currentUserAvatar);
   },
 }
 </script>
