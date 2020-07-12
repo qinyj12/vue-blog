@@ -29,7 +29,9 @@
 
             <!-- 这里是展示评论的 -->
             <ul class="comments-list">
-                <li v-for="item in commentsList" :key="item.comment">
+                <li v-for="item in commentsList" 
+                    :key="item.time"
+                >
                     <el-divider></el-divider>
                     <div class="avatar-time-comment">
                         <div class="list-avatar">
@@ -45,9 +47,9 @@
             </ul>
             <el-pagination 
                 layout="prev, pager, next" 
-                :total="4" 
-                :page-size="2"
-                :current-page="1"
+                :total="commentsCounts" 
+                :page-size="pageSize"
+                :current-page="currentPage"
                 @current-change="handleCurrentChange"
             >
             </el-pagination>
@@ -65,14 +67,17 @@ export default {
             currentUser: {
                 name: '',
                 avatar: ''
-            }
+            },
+            pageSize: 2,
+            currentPage: 1,
+            commentsCounts: null,
         }
     },
     mounted() {
         this.getArticleDetail(this.$route.params.article_id);
-        this.getComments(this.$route.params.article_id).then(resp => {this.commentsList = resp.data});
-        this.currentUser.name = store.state.currentUserName
-        this.currentUser.avatar = store.state.currentUserAvatar
+        this.getComments(this.$route.params.article_id);
+        this.currentUser.name = store.state.currentUserName;
+        this.currentUser.avatar = store.state.currentUserAvatar;
     },
     methods: {
         // 定义一个拿到article_id的正文的函数
@@ -89,15 +94,24 @@ export default {
             data.append('usid', store.state.currentUserId);
             this.axios.post('http://127.0.0.1:5000/sendcomment', data).then(resp => {console.log(resp)})
         },
+        // 定义一个从后端拿到当前article的评论的函数
         getComments(articleId) {
             let data = new FormData();
-            let slicePage = [0, 4];
+            let slicePage = [(this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize];
             data.append('comments_for_single', JSON.stringify(slicePage));
-            return this.axios.post('http://127.0.0.1:5000/comments/'+articleId, data)
+            return this.axios.post('http://127.0.0.1:5000/comments/'+articleId, data).then(resp => {
+                if (resp.data.status == 200) {
+                    this.commentsList = resp.data.result.commentsList;
+                    this.commentsCounts = resp.data.result.count;
+                } else {
+                    alert('出错了')
+                }
+            })
         },
         // 这是element-pagination的函数
-        handleCurrentChange() {
-            alert('switch')
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.getComments(this.$route.params.article_id)
         }
     },
     computed: {
