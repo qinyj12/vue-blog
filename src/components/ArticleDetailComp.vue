@@ -19,12 +19,14 @@
                         v-model="commentArea"
                         maxlength="100"
                         show-word-limit
+                        :disabled="ifDisabled"
                     >
                     </el-input>
                 </div>
             </div>
             <div class="leave-button">
-                <el-button type="success" @click="sendComment()" :disabled="buttonDisabled">发送</el-button>
+                <el-button type="success" v-show="!ifDisabled" @click="sendComment()" :disabled="buttonDisabled">发送</el-button>
+                <el-button type="success" v-show="ifDisabled" @click="loginFirst()">去登录</el-button>
             </div>
 
             <!-- 这里是展示评论的 -->
@@ -64,20 +66,14 @@ export default {
             articleDetail: '',
             commentArea: '',
             commentsList: '',
-            currentUser: {
-                name: '',
-                avatar: ''
-            },
             pageSize: 2,
             currentPage: 1,
-            commentsCounts: null,
+            commentsCounts: null
         }
     },
     mounted() {
         this.getArticleDetail(this.$route.params.article_id);
         this.getComments(this.$route.params.article_id);
-        this.currentUser.name = store.state.currentUserName;
-        this.currentUser.avatar = store.state.currentUserAvatar;
     },
     methods: {
         // 定义一个拿到article_id的正文的函数
@@ -87,12 +83,17 @@ export default {
             })
         },
         // 定义一个发布评论的函数
-        sendComment() {
+        async sendComment() {
             let data = new FormData();
             data.append('article_id', this.$route.params.article_id);
             data.append('comment', this.commentArea);
             data.append('usid', store.state.currentUserId);
-            this.axios.post('http://127.0.0.1:5000/sendcomment', data).then(resp => {console.log(resp)})
+            await this.axios.post('http://127.0.0.1:5000/sendcomment', data).then(resp => {console.log(resp)});
+            this.getComments(this.$route.params.article_id)
+        },
+        // 如果还没有登录的话，需要先跳转登录
+        loginFirst() {
+            this.$router.push('/login')
         },
         // 定义一个从后端拿到当前article的评论的函数
         getComments(articleId) {
@@ -122,6 +123,22 @@ export default {
             } else {
                 return true
             }
+        },
+        // 监控vuex里user状态的变化。一旦变化立即更新
+        currentUser: () => {
+            return {
+                'avatar':store.state.currentUserAvatar,
+                'name':store.state.currentUserName,
+                'id':store.state.currentUserId
+            }
+        },
+        // 定义一个函数，用来给一些东西做v-show、disabled之类的。如果不是登录状态就是true
+        ifDisabled: () => {
+            if (store.state.currentUserId == null) {
+                return true;
+            } else {
+                return false;
+            }
         }
     },
 }
@@ -133,6 +150,7 @@ export default {
     flex-direction column
     align-items center
     text-align left
+
     .article-detail, .article-comments
         border-radius 5px
         padding 40px
@@ -190,4 +208,8 @@ export default {
 <style lang="stylus">
 // 引入mavon-editor定义的css，而且还要给模板语法的class改成markdown-body，不然很多md方言无法渲染
 @import '../../node_modules/mavon-editor/dist/css/index.css'
+#articleDetailComp
+    .article-detail
+        *
+            max-width 100%
 </style>

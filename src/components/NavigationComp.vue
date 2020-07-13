@@ -4,15 +4,30 @@
             <div class="nav-start">
                 <li><router-link to="/">首页</router-link></li>
                 <li><a href="http://forum.southdog.cool/" target="_blank">论坛</a></li>
-                <li><router-link to="/about">关于我</router-link></li>
+                <li><router-link :to="'/article/'+1">关于我</router-link></li>
                 <li><router-link to="/login">登录</router-link></li>
             </div>
             <div class="nav-end">
-                <li><router-link to="/publish">发布</router-link></li>
+                <li v-show="ifDisabled"><router-link to="/publish">发布</router-link></li>
+                <li v-show="!ifDisabled"><img src="../assets/logo.png" alt="logo"></li>
             </div>
         </ul>
     </div>
 </template>
+<script>
+import store from '../store'
+export default {
+    computed: {
+        ifDisabled: () => {
+            if (store.state.currentUserId == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+}
+</script>
 <style lang="stylus" scoped>
     #navigationComp
         display flex
@@ -41,6 +56,11 @@
                 padding-right 10%
                 box-sizing border-box
                 justify-content flex-end
+                li
+                    height 28px
+                    img
+                        height 100%
+                        transform scale(2.5)
                 @media screen and (max-width 700px)
                     display none
             div

@@ -5,9 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        currentUserName: '',
-        currentUserAvatar: '',
-        currentUserId: ''
+        currentUserName: '未登录',
+        currentUserAvatar: 'img/avatar0.54e2a03d.png',
+        currentUserId: null
     },
     mutations: {
         getCurrentUserInfo(state, value) {

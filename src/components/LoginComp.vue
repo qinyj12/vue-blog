@@ -53,6 +53,7 @@
     </div>
 </template>
 <script>
+import store from '../store'
 export default {
     data() {
         return {
@@ -62,14 +63,35 @@ export default {
         }
     },
     methods: {
-        confirmLogin() {
+        async confirmLogin() {
             let data = new FormData;
             data.append('email', this.email);
             data.append('password', this.password);
-            this.axios.post('http://127.0.0.1:5000/login', data)
-                .then(response => {
-                    console.log(response.data)
-                })
+            await this.axios.post('http://127.0.0.1:5000/login', data).then(resp => {
+                if (resp.data.status == 200) {
+                    this.$message({
+                        message: '登录成功，3秒后跳转首页',
+                        type: 'success'
+                    });
+                    setTimeout(() => {
+                        this.$router.push('/')
+                    }, 3000);
+                    
+                } else {
+                    this.$message.error(resp.data.result);
+                }
+            });
+            this.getSession()
+        },
+        getSession() {
+            this.axios.defaults.withCredentials = true;
+            this.axios.post('http://127.0.0.1:5000/getsession').then(resp => {
+                if (resp.data.status == 200) {
+                    store.commit('getCurrentUserInfo', resp.data.result)
+                } else {
+                    store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.54e2a03d.png', 'nickname':'未登录'})
+                }
+            })
         },
         confirmSignup() {
             console.log('还没有写')

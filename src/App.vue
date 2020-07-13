@@ -40,10 +40,9 @@ export default {
         this.axios.defaults.withCredentials = true;
         this.axios.post('http://127.0.0.1:5000/getsession').then(resp => {
             if (resp.data.status == 200) {
-                console.log('登录成功');
                 store.commit('getCurrentUserInfo', resp.data.result)
             } else {
-                console.log('先登录哦')
+                store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.54e2a03d.png', 'nickname':'未登录'})
             }
         })
     },

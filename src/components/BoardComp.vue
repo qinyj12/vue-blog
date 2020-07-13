@@ -1,10 +1,8 @@
 <template>
     <div id="boardComp">
         <!-- 留言板内容 -->
-        <ul ref="boardRef">
-            <li v-for="item in discourseList" 
-                :key="item.time"
-            >
+        <ul ref="boardRef" class="board-list">
+            <li v-for="item in discourseList" :key="item.time">
                 <div class="avatar-name">
                     <div class="board-avatar">
                         <img :src="item.user_avatar" alt="头像" width="100%" height="100%">
@@ -32,12 +30,12 @@
         <div class="comments-board">
             <div class="avatar-name">
                 <div class="board-avatar">
-                    <img src="../assets/avatar/avatar1.png" alt="头像" width="100%" height="100%">
+                    <img :src="currentUser.avatar" alt="头像" width="100%" height="100%">
                 </div>
-                <div class="board-name">dog</div>
+                <div class="board-name">{{currentUser.name}}</div>
             </div>
             <div class="say-something">
-                <!-- 发布留言 -->
+
                 <div class="leave-board">
                     <el-input
                         type="textarea"
@@ -45,11 +43,13 @@
                         v-model="boardArea"
                         maxlength="100"
                         show-word-limit
+                        :disabled="ifDisabled"
                     >
                     </el-input>
                 </div>
                 <div class="leave-button">
-                    <el-button type="success" @click="sendBoard()" :disabled="buttonDisabled">发送</el-button>
+                    <el-button type="success" v-show="!ifDisabled" @click="sendBoard()" :disabled="buttonDisabled">发送</el-button>
+                    <el-button type="success" v-show="ifDisabled" @click="loginFirst()">去登录</el-button>
                 </div>
             </div>
         </div>
@@ -66,58 +66,44 @@ export default {
             commentsCounts: null,
             boardArea: '',
             discourseList: '',
-            discourse: [
-                {
-                    message: 'this is the first message',
-                    time: '2020年5月21日',
-                    avatar: require("../assets/avatar/avatar2.png"),
-                    name: 'cat'
-                },
-                {
-                    message: '祝网站早日完工',
-                    time: '2020年5月22日',
-                    avatar: require("../assets/avatar/avatar1.png"),
-                    name: 'dog'
-                },
-                {
-                    message: '我是第三条评论',
-                    time: '2020年6月14日',
-                    avatar: require("../assets/avatar/avatar1.png"),
-                    name: '第三条'
-                },
-                {
-                    message: '我是第四条评论',
-                    time: '2020年6月14日',
-                    avatar: require("../assets/avatar/avatar1.png"),
-                    name: '第四条'
-                }
-            ]
+            // 给留言板定义一个key，让他更新
+            boardKey: 0
         }
     },
-    mounted: function() {
-        let boardHeight = this.$refs.boardRef.offsetHeight;
-        this.$refs.boardRef.style.height = boardHeight + 'px';
-        this.getBoard();
+    mounted: async function() {
+        await this.getBoard();
+        this.fixBoardHeight()
     },
     methods: {
         // 定义一个发布评论的函数
-        sendBoard() {
+        async sendBoard() {
             let data = new FormData();
             data.append('comment', this.boardArea);
             data.append('usid', store.state.currentUserId);
-            this.axios.post('http://127.0.0.1:5000/sendboard', data).then(resp => {console.log(resp)})
+            await this.axios.post('http://127.0.0.1:5000/sendboard', data).then(resp => {console.log(resp)});
+            // 重新获取留言内容，这样就可以更新留言板。也许是因为key变动了组件就会销毁并重新渲染
+            this.getBoard()
+        },
+        // 如果没有登录的话，要先登录才能sendBoard
+        loginFirst(){
+            this.$router.push('/login')
+        },
+        // 固定住留言板的高度
+        fixBoardHeight() {
+            let boardHeight = this.$refs.boardRef.offsetHeight;
+            this.$refs.boardRef.style.height = boardHeight + 'px';
         },
         // 定义一个从后端拿到当前article的评论的函数
         getBoard() {
             let data = new FormData();
             let slicePage = [(this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize];
             data.append('comments_for_single', JSON.stringify(slicePage));
-            return this.axios.post('http://127.0.0.1:5000/board/', data).then(resp => {
+            return this.axios.post('http://127.0.0.1:5000/board', data).then(resp => {
                 if (resp.data.status == 200) {
-                    this.discourseList = resp.data.result.commentsList;
+                    this.discourseList = resp.data.result.boardList;
                     this.commentsCounts = resp.data.result.count;
                 } else {
-                    alert('出错了')
+                    console.log(resp.data.result)
                 }
             })
         },
@@ -135,17 +121,35 @@ export default {
             } else {
                 return true
             }
+        },
+        // 监控vuex里user状态的变化。一旦变化立即更新
+        currentUser: () => {
+            return {
+                'avatar':store.state.currentUserAvatar,
+                'name':store.state.currentUserName,
+                'id':store.state.currentUserId
+            }
+        },
+        // 定义一个函数，用来给一些东西做v-show、disabled之类的。如果不是登录状态就是true
+        ifDisabled: () => {
+            if (store.state.currentUserId == null) {
+                return true;
+            } else {
+                return false;
+            }
         }
     },
 }
 </script>
 <style lang="stylus" scoped>
 #boardComp
-    ul
+    ul.board-list
         list-style none
         padding 0
         margin 0
+        position relative
         li
+            position relative
             display flex
             margin 10px 0
             height 100px

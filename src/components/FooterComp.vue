@@ -20,7 +20,7 @@
         </div>
         <!--Header ends-->
         <div class="content">
-            <p>by DogDogDog</p>
+            <p>我做的</p>
         </div>
     </div>
 </template>
