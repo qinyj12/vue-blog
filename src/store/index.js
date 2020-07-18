@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         currentUserName: '未登录',
-        currentUserAvatar: 'img/avatar0.54e2a03d.png',
+        currentUserAvatar: 'img/avatar0.png',
         currentUserId: null
     },
     mutations: {

@@ -8,7 +8,7 @@
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">
                         <div class="article-pic" ref="picture">
-                            <img :src="'http://127.0.0.1:5000/static/articles/'+item.id+'/cover/'+item.cover" alt="头图" class="cover">
+                            <img :src="'http://47.100.60.198:5000/static/articles/'+item.id+'/cover/'+item.cover" alt="头图" class="cover">
                         </div>
                     </div>
                     <div class="avatar-title-time">
@@ -85,7 +85,7 @@ export default {
             let data = new FormData();
             let slicePage = [(this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize];
             data.append('articles_for_single', JSON.stringify(slicePage));
-            return this.axios.post('http://127.0.0.1:5000/getarticle', data).then(r => {
+            return this.axios.post('http://47.100.60.198:5000/getarticle', data).then(r => {
                 this.articleList = r.data.result.articleList;
                 this.articleCounts = r.data.result.count
             })

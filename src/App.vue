@@ -38,11 +38,11 @@ export default {
     },
     mounted() {
         this.axios.defaults.withCredentials = true;
-        this.axios.post('http://127.0.0.1:5000/getsession').then(resp => {
+        this.axios.post('http://47.100.60.198:5000/getsession').then(resp => {
             if (resp.data.status == 200) {
                 store.commit('getCurrentUserInfo', resp.data.result)
             } else {
-                store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.54e2a03d.png', 'nickname':'未登录'})
+                store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.png', 'nickname':'未登录'})
             }
         })
     },

@@ -12,7 +12,7 @@
             :disabled="!ifWriteAbstract"></el-input>
         <!-- 此处选择头像 -->
         <p>头像</p>
-        <ul>
+        <ul class="avatar-list">
             <li v-for="(item, index) in avatarList" :key="item">
                 <img :src="item" alt="头像" width="80px" ref="avatarImg" @click="chooseAvatar(index)" />
                 <i class="chosen-icon" ref="avatarChosen" :class="{'if-chosen': index !== chooseWhichAvatar}"></i>
@@ -22,7 +22,7 @@
         <p>封面图</p>
         <el-upload
             class="cover-uploader"
-            action="http://127.0.0.1:5000/savecover"
+            action="http://47.100.60.198:5000/savecover"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -64,6 +64,7 @@ export default {
         chooseAvatar(index) {
             this.chooseWhichAvatar = index;
             this.chosenAvatar = this.avatarList[this.chooseWhichAvatar];
+            console.log(this.chosenAvatar)
         },
         // 上传封面图
         handleAvatarSuccess(res, file) {
@@ -97,7 +98,7 @@ export default {
                 data.append('content_md', this.articleMd);
                 data.append('content_html', this.articleHtml);
                 data.append('cover', this.tempImageName);
-                return this.axios.post('http://127.0.0.1:5000/savearticle', data)
+                return this.axios.post('http://47.100.60.198:5000/savearticle', data)
             } else {
                 return '不能为空'
             }
@@ -149,19 +150,13 @@ export default {
             var formdata = new FormData();
             formdata.append('image', $file);
             this.axios({
-                url: 'http://127.0.0.1:5000/saveimg',
+                url: 'http://47.100.60.198:5000/saveimg',
                 method: 'post',
                 data: formdata,
                 headers: { 'Content-Type': 'multipart/form-data' },
             }).then((res) => {
-                // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-                /**
-                * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-                * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-                * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-                */
                 console.log(res.data);
-                this.$refs.mavonEditor.$img2Url(pos, 'http://127.0.0.1:5000/'+res.data.result)}
+                this.$refs.mavonEditor.$img2Url(pos, 'http://47.100.60.198:5000/'+res.data.result)}
             )
         },
         // 删除md图片
@@ -170,7 +165,7 @@ export default {
             let url = filename[0];
             let data = new FormData;
             data.append('imgUrl', url);
-            this.axios.post('http://127.0.0.1:5000/deleteimg',data).then(res => {console.log(res.data)})
+            this.axios.post('http://47.100.60.198:5000/deleteimg',data).then(res => {console.log(res.data)})
 
         }
     }
@@ -193,6 +188,7 @@ export default {
             list-style: none;
             padding: 0;
             display: flex;
+            flex-wrap: wrap;
 
             li {
                 height: 80px;

@@ -21,7 +21,7 @@
                             <el-input placeholder="请输入邮箱" v-model="email" clearable></el-input>
                             <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
                             <p>忘记密码啦？</p>
-                            <el-button type="success" round :loading="false" @click="confirmLogin">登录</el-button>
+                            <el-button type="success" round :loading="false" @click="confirmLogin()">登录</el-button>
                         </div>
                     </div>
                 </transition>
@@ -41,10 +41,28 @@
                     <div class="blank right-blank" v-if="!login">
                         <div v-if="!login" class="login-signup-form signup-form">
                             <h1>注册</h1>
-                            <el-input placeholder="请输入邮箱" v-model="email" clearable></el-input>
-                            <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
-                            <p>不想注册嘛？</p>
-                            <el-button type="warning" round :loading="false" @click="confirmSignup">注册</el-button>
+                            <!-- 第一步 -->
+                            <div class="father-box-for-step">
+                                <transition name="first-step">
+                                    <div v-show="!ifNextStep" class="first-step-box">
+                                        <el-input placeholder="请输入邮箱" v-model="emailForSignup" clearable></el-input>
+                                        <div class="mailcode-btn">
+                                            <el-input placeholder="输入验证码" v-model="mailcode" clearable></el-input>
+                                            <el-button class="btn-get-mailcode" type="primary" :loading="ifGettingMailcode" @click="sendMailcode">获取验证码</el-button>
+                                        </div>
+                                        <el-button type="warning" round @click="signupNextStep()">下一步</el-button>
+                                    </div>
+                                </transition>
+
+                                <transition name="next-step">
+                                    <!-- 点击下一步 -->
+                                    <div v-show="ifNextStep" class="next-step-box">
+                                        <el-input placeholder="请输入昵称" v-model="nicknameForSignup" clearable></el-input>
+                                        <el-input placeholder="请输入密码" v-model="passwordForSignup" show-password></el-input>
+                                        <el-button type="warning" round :loading="false" @click="confirmSignup()">注册</el-button>
+                                    </div>
+                                </transition>
+                            </div>
                         </div>
                     </div>
                 </transition>
@@ -59,7 +77,14 @@ export default {
         return {
             login: true,
             email: null,
-            password: null
+            password: null,
+            emailForSignup: null,
+            passwordForSignup: null,
+            nicknameForSignup: null,
+            mailcode: null,
+            ifGettingMailcode: false, // 用于获取验证码后button的loading
+            ifNextStep: false,
+            confirmEmail: null // 用户点击发送验证码后，把email赋值过来
         }
     },
     methods: {
@@ -67,7 +92,7 @@ export default {
             let data = new FormData;
             data.append('email', this.email);
             data.append('password', this.password);
-            await this.axios.post('http://127.0.0.1:5000/login', data).then(resp => {
+            await this.axios.post('http://47.100.60.198:5000/login', data).then(resp => {
                 if (resp.data.status == 200) {
                     this.$message({
                         message: '登录成功，3秒后跳转首页',
@@ -85,7 +110,7 @@ export default {
         },
         getSession() {
             this.axios.defaults.withCredentials = true;
-            this.axios.post('http://127.0.0.1:5000/getsession').then(resp => {
+            this.axios.post('http://47.100.60.198:5000/getsession').then(resp => {
                 if (resp.data.status == 200) {
                     store.commit('getCurrentUserInfo', resp.data.result)
                 } else {
@@ -93,8 +118,57 @@ export default {
                 }
             })
         },
-        confirmSignup() {
-            console.log('还没有写')
+        async confirmSignup() {
+            let data = new FormData;
+            data.append('email', this.confirmEmail);
+            data.append('password', this.passwordForSignup);
+            data.append('nickname', this.nicknameForSignup);
+            data.append('mailcode', this.mailcode);
+            await this.axios.post('http://47.100.60.198:5000/signup', data).then(resp => {
+                if (resp.data.status == 200) {
+                    this.$message({
+                        message: '注册成功，3秒后跳转首页',
+                        type: 'success'
+                    });
+                    setTimeout(() => {
+                        this.$router.push('/')
+                    }, 3000);
+                    
+                } else {
+                    this.$message.error(resp.data.result);
+                    this.$router.go(0)
+                }
+            });
+            this.getSession()
+        },
+        sendMailcode() {
+            this.ifGettingMailcode = true;
+            this.confirmEmail = this.emailForSignup;
+            this.axios.get('http://47.100.60.198:5000/mailcode?email='+this.confirmEmail+'&purpose=signup')
+                .then(resp=>{
+                    if (resp.data.status == 200) {
+                        this.ifGettingMailcode = false;
+                        console.log(resp.data.result);
+                    } else {
+                        alert(resp.data.result)
+                        this.ifGettingMailcode = false;
+                    }
+                });
+        },
+        signupNextStep() {
+            this.axios.get('http://47.100.60.198:5000/checkcode?email='+this.confirmEmail+'&mailcode='+this.mailcode+'&purpose=signup')
+                .then(resp => {
+                    console.log(resp.data);
+                    if (resp.data.status == 200) {
+                        // alert('验证通过');
+                        this.ifNextStep = true
+                    } else {
+                        alert(resp.data.result)
+                    }
+                })
+        },
+        testNextStep() {
+            this.ifNextStep = !this.ifNextStep
         }
     },
 }
@@ -110,7 +184,7 @@ export default {
 <style lang="stylus" scoped>
 #loginComp
     padding 20px
-    margin 0
+    margin-bottom 20px
     @media screen and (max-width 800px)
         transform scale(0.9, 0.9)
     @media screen and (max-width 550px)
@@ -156,7 +230,7 @@ export default {
 
             // 左边绿色组件
             .left-bar-slide-enter-active
-                transition all 0.5s                        
+                transition all 0.5s
             .left-bar-slide-leave-active
                 transition all 0.5s
             .left-bar-slide-enter
@@ -201,7 +275,36 @@ export default {
                         margin 20px 0
                     p
                         color dimgray
-                    
+                    .father-box-for-step
+                        position relative
+                        width 100%
+                        height 100%
+
+                        .first-step-box
+                            .mailcode-btn
+                                display flex
+                                margin 0
+                                .btn-get-mailcode
+                                    padding 5px
+                                    margin-left 10px
+
+                        .next-step-box
+                            position absolute
+                            top 0
+                        
+                        .first-step-leave-active
+                            transition all 1s
+                            // animation flipInY 1s
+                        .first-step-leave-to
+                            transform translateX(50%)
+                            opacity 0
+                        .next-step-enter-active
+                            transition all 1s
+                            // animation flipOutY 1s
+                        .next-step-enter
+                            transform translateX(-50%)
+                            opacity 0
+
             .left-blank
                 border-radius 15px 0 0 15px
             .right-blank
@@ -240,5 +343,4 @@ export default {
 
             .right-blank-slide-leave-to
                 transform translateX(100%)
-
 </style>
