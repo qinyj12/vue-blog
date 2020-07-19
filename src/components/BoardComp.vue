@@ -61,7 +61,7 @@ import store from '../store'
 export default {
     data() {
         return {
-            pageSize: 2,
+            pageSize: 4,
             currentPage: 1,
             commentsCounts: null,
             boardArea: '',
@@ -168,6 +168,9 @@ export default {
                 .board-name
                     box-sizing border-box
                     width 50px
+                    overflow: hidden
+                    white-space: nowrap
+                    text-overflow: ellipsis
             .message-time
                 flex 1
                 box-sizing border-box
@@ -232,7 +235,9 @@ export default {
         .board-name
             box-sizing border-box
             width 50px
-
+            overflow: hidden
+            white-space: nowrap
+            text-overflow: ellipsis
     .say-something
         flex 1
         box-sizing border-box

@@ -23,6 +23,7 @@
         <el-upload
             class="cover-uploader"
             action="http://47.100.60.198:5000/savecover"
+            :with-credentials="true"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -122,6 +123,7 @@ export default {
                         try {
                             let response = await that.saveArticle();
                             console.log(response);
+                            alert(response.data.result);
                             instance.confirmButtonLoading = false;
                             done()
                         } catch {
@@ -135,10 +137,7 @@ export default {
                     }
                 }
             }).then(action => {
-                this.$message({
-                    type: "info",
-                    message: "action: " + action
-                });
+                console.log(action)
             }).catch(()=>{
                 // 点击取消
                 console.log("cancel")

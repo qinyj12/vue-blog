@@ -8,7 +8,8 @@
                 <div @mouseenter="isHover(index)" @mouseleave="noHover(index)">
                     <div class="picture-abstract">
                         <div class="article-pic" ref="picture">
-                            <img :src="'http://47.100.60.198:5000/static/articles/'+item.id+'/cover/'+item.cover" alt="头图" class="cover">
+                            <div :style="'backgroundImage:url(http://47.100.60.198:5000/static/articles/'+item.id+'/cover/'+item.cover+');backgroundSize:cover;'" class="cover"></div>
+                            <!-- <div style="backgroundImage:url(http://47.100.60.198:5000/static/articles/1/cover/cover.jpg);backgroundSize:cover" class="cover"></div> -->
                         </div>
                     </div>
                     <div class="avatar-title-time">
@@ -63,7 +64,7 @@ export default {
     data() {
         return {
             // el-pagination的参数，前者是每页有多少元素，后者是当前所在页
-            pageSize: 2,
+            pageSize: 4,
             currentPage: 1,
             articleCounts: null,
             // 从后端拿到的articlelist
@@ -163,6 +164,7 @@ $viewsCommentsH = 30px
                     // 封面
                     .cover
                         width 100%
+                        height 100%
 
             // 头像-标题-时间
             .avatar-title-time

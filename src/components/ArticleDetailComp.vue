@@ -38,7 +38,7 @@
                     <div class="avatar-time-comment">
                         <div class="list-avatar">
                             <img :src='item.user_avatar' alt="头像" width="100%" height="100%">
-                            <div>{{item.user_name}}</div>
+                            <div class="list-avatar-name">{{item.user_name}}</div>
                         </div>
                         <div class="time-comment">
                             <div class="list-time">{{item.time}}</div>
@@ -66,7 +66,7 @@ export default {
             articleDetail: '',
             commentArea: '',
             commentsList: '',
-            pageSize: 2,
+            pageSize: 5,
             currentPage: 1,
             commentsCounts: null
         }
@@ -168,6 +168,12 @@ export default {
             .leave-avatar-name
                 width 50px
                 height 50px
+                .leave-name
+                    box-sizing border-box
+                    width 50px
+                    overflow: hidden
+                    white-space: nowrap
+                    text-overflow: ellipsis
             .leave-comment
                 box-sizing border-box
                 padding 5px
@@ -194,6 +200,12 @@ export default {
                     .list-avatar
                         width 50px
                         height 50px
+                        .list-avatar-name
+                            box-sizing border-box
+                            width 50px
+                            overflow: hidden
+                            white-space: nowrap
+                            text-overflow: ellipsis
                     .time-comment
                         flex 1
                         display flex
