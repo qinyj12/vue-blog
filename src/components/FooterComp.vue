@@ -21,7 +21,13 @@
         </div>
         <!--Header ends-->
         <div class="content">
-            <div>我想去旅游</div>
+            <div class="contact-icon">
+                <i class="wechat-icon" @mouseenter="showCode" @mouseleave="hideCode">
+                    <i class="wechat-code" ref="wechatCode"></i>
+                </i>
+                <a href="https://github.com/qinyj12" target="_blank"><i class="github-icon"></i></a>
+            </div>
+            <p>京ICP备20012830号-1</p>
         </div>
     </div>
 </template>
@@ -29,6 +35,14 @@
     export default {
         data() {
             return {}
+        },
+        methods: {
+            showCode() {
+                this.$refs.wechatCode.style.display = "block"
+            },
+            hideCode() {
+                this.$refs.wechatCode.style.display = "none"
+            }
         },
     }
 </script>
@@ -45,7 +59,6 @@
         position: relative;
         text-align: center;
         background-color: white;
-        /* background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%); */
     }
 
     .waves {
@@ -53,7 +66,6 @@
         width: 100%;
         height: 15vh;
         margin-bottom: -7px;
-        /*Fix for safari gap*/
         min-height: 100px;
         max-height: 150px;
     }
@@ -87,11 +99,41 @@
         background-color: rgba(68, 106, 112);
         padding: 20px;
         color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
     }
-    
-    .content > div {
+    .contact-icon {
+        display: flex;
+        margin-bottom: 10px;
+    }
+    .wechat-icon, .github-icon {
+        display: block;
+        width: 30px;
+        height: 30px;
+    }
+    .wechat-icon {
+        background: url('../assets/icon/wechat.png') no-repeat;
+        background-size: contain;
+        margin-right: 10px;
+        position: relative;
+    }
+    .wechat-code {
+        background: url('../assets/contact/wechat_code.png') no-repeat;
+        background-size: contain;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        top: -110px;
+        left: -35px;
+        display: none;
+    }
+    .github-icon {
+        background: url('../assets/icon/github.png') no-repeat;
+        background-size: contain; 
+    }
+    .content > p {
         text-align: right;
-        margin-bottom: 20px;
     }
 
     @keyframes move-forever {
@@ -110,11 +152,6 @@
             height: 40px;
             min-height: 40px;
         }
-
-        .content {
-            height: 30vh;
-        }
-
         h1 {
             font-size: 24px;
         }

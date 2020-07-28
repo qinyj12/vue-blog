@@ -40,9 +40,13 @@ export default {
         this.axios.defaults.withCredentials = true;
         this.axios.post('http://47.100.60.198:5000/getsession').then(resp => {
             if (resp.data.status == 200) {
-                store.commit('getCurrentUserInfo', resp.data.result)
+                store.commit('getCurrentUserInfo', resp.data.result);
+                console.log('yeh');
+                console.log(resp.data)
             } else {
-                store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.png', 'nickname':'未登录'})
+                store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.png', 'nickname':'未登录'});
+                console.log('else');
+                console.log(resp.data)
             }
         })
     },
