@@ -22,7 +22,7 @@
         <p>封面图</p>
         <el-upload
             class="cover-uploader"
-            action="https://47.100.60.198:9999/savecover"
+            action="https://southdog.cool:9999/savecover"
             :with-credentials="true"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -99,7 +99,7 @@ export default {
                 data.append('content_md', this.articleMd);
                 data.append('content_html', this.articleHtml);
                 data.append('cover', this.tempImageName);
-                return this.axios.post('https://47.100.60.198:9999/savearticle', data)
+                return this.axios.post('https://southdog.cool:9999/savearticle', data)
             } else {
                 return '不能为空'
             }
@@ -149,13 +149,13 @@ export default {
             var formdata = new FormData();
             formdata.append('image', $file);
             this.axios({
-                url: 'https://47.100.60.198:9999/saveimg',
+                url: 'https://southdog.cool:9999/saveimg',
                 method: 'post',
                 data: formdata,
                 headers: { 'Content-Type': 'multipart/form-data' },
             }).then((res) => {
                 // console.log(res.data);
-                this.$refs.mavonEditor.$img2Url(pos, 'https://47.100.60.198:9999/'+res.data.result)}
+                this.$refs.mavonEditor.$img2Url(pos, 'https://southdog.cool:9999/'+res.data.result)}
             )
         },
         // 删除md图片
@@ -164,7 +164,7 @@ export default {
             let url = filename[0];
             let data = new FormData;
             data.append('imgUrl', url);
-            this.axios.post('https://47.100.60.198:9999/deleteimg',data)
+            this.axios.post('https://southdog.cool:9999/deleteimg',data)
 
         }
     }

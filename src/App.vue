@@ -38,7 +38,7 @@ export default {
     },
     mounted() {
         this.axios.defaults.withCredentials = true;
-        this.axios.post('https://47.100.60.198:9999/getsession').then(resp => {
+        this.axios.post('https://southdog.cool:9999/getsession').then(resp => {
             if (resp.data.status == 200) {
                 store.commit('getCurrentUserInfo', resp.data.result);
             } else {

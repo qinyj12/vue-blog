@@ -78,7 +78,7 @@ export default {
     methods: {
         // 定义一个拿到article_id的正文的函数
         getArticleDetail(id) {
-            this.axios.get('https://47.100.60.198:9999/article/'+id).then(resp => {
+            this.axios.get('https://southdog.cool:9999/article/'+id).then(resp => {
                 this.articleDetail = resp.data.result
             })
         },
@@ -88,7 +88,7 @@ export default {
             data.append('article_id', this.$route.params.article_id);
             data.append('comment', this.commentArea);
             data.append('usid', store.state.currentUserId);
-            await this.axios.post('https://47.100.60.198:9999/sendcomment', data);
+            await this.axios.post('https://southdog.cool:9999/sendcomment', data);
             this.getComments(this.$route.params.article_id)
         },
         // 如果还没有登录的话，需要先跳转登录
@@ -100,7 +100,7 @@ export default {
             let data = new FormData();
             let slicePage = [(this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize];
             data.append('comments_for_single', JSON.stringify(slicePage));
-            return this.axios.post('https://47.100.60.198:9999/comments/'+articleId, data).then(resp => {
+            return this.axios.post('https://southdog.cool:9999/comments/'+articleId, data).then(resp => {
                 if (resp.data.status == 200) {
                     this.commentsList = resp.data.result.commentsList;
                     this.commentsCounts = resp.data.result.count;
