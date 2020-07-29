@@ -80,7 +80,7 @@ export default {
             let data = new FormData();
             data.append('comment', this.boardArea);
             data.append('usid', store.state.currentUserId);
-            await this.axios.post('http://47.100.60.198:5000/sendboard', data).then(resp => {console.log(resp)});
+            await this.axios.post('https://47.100.60.198:9999/sendboard', data).then(resp => {console.log(resp)});
             // 重新获取留言内容，这样就可以更新留言板。也许是因为key变动了组件就会销毁并重新渲染
             this.getBoard()
         },
@@ -98,12 +98,13 @@ export default {
             let data = new FormData();
             let slicePage = [(this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize];
             data.append('comments_for_single', JSON.stringify(slicePage));
-            return this.axios.post('http://47.100.60.198:5000/board', data).then(resp => {
+            return this.axios.post('https://47.100.60.198:9999/board', data).then(resp => {
                 if (resp.data.status == 200) {
                     this.discourseList = resp.data.result.boardList;
                     this.commentsCounts = resp.data.result.count;
                 } else {
-                    console.log(resp.data.result)
+                    // console.log(resp.data.result);
+                    alert('获取评论失败')
                 }
             })
         },

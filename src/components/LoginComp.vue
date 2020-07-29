@@ -92,7 +92,7 @@ export default {
             let data = new FormData;
             data.append('email', this.email);
             data.append('password', this.password);
-            await this.axios.post('http://47.100.60.198:5000/login', data).then(resp => {
+            await this.axios.post('https://47.100.60.198:9999/login', data).then(resp => {
                 if (resp.data.status == 200) {
                     this.$message({
                         message: '登录成功，3秒后跳转首页',
@@ -110,9 +110,9 @@ export default {
         },
         getSession() {
             this.axios.defaults.withCredentials = true;
-            this.axios.post('http://47.100.60.198:5000/getsession').then(resp => {
+            this.axios.post('https://47.100.60.198:9999/getsession').then(resp => {
                 if (resp.data.status == 200) {
-                    console.log(resp.data);
+                    // console.log(resp.data);
                     store.commit('getCurrentUserInfo', resp.data.result)
                 } else {
                     store.commit('getCurrentUserInfo', {'avatar':'img/avatar0.png', 'nickname':'未登录'})
@@ -125,7 +125,7 @@ export default {
             data.append('password', this.passwordForSignup);
             data.append('nickname', this.nicknameForSignup);
             data.append('mailcode', this.mailcode);
-            await this.axios.post('http://47.100.60.198:5000/signup', data).then(resp => {
+            await this.axios.post('https://47.100.60.198:9999/signup', data).then(resp => {
                 if (resp.data.status == 200) {
                     this.$message({
                         message: '注册成功，3秒后跳转首页',
@@ -145,7 +145,7 @@ export default {
         sendMailcode() {
             this.ifGettingMailcode = true;
             this.confirmEmail = this.emailForSignup;
-            this.axios.get('http://47.100.60.198:5000/mailcode?email='+this.confirmEmail+'&purpose=signup')
+            this.axios.get('https://47.100.60.198:9999/mailcode?email='+this.confirmEmail+'&purpose=signup')
                 .then(resp=>{
                     if (resp.data.status == 200) {
                         this.ifGettingMailcode = false;
@@ -157,9 +157,9 @@ export default {
                 });
         },
         signupNextStep() {
-            this.axios.get('http://47.100.60.198:5000/checkcode?email='+this.confirmEmail+'&mailcode='+this.mailcode+'&purpose=signup')
+            this.axios.get('https://47.100.60.198:9999/checkcode?email='+this.confirmEmail+'&mailcode='+this.mailcode+'&purpose=signup')
                 .then(resp => {
-                    console.log(resp.data);
+                    // console.log(resp.data);
                     if (resp.data.status == 200) {
                         // alert('验证通过');
                         this.ifNextStep = true
