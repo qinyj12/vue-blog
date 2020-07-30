@@ -39,6 +39,7 @@ export default {
     mounted() {
         this.axios.defaults.withCredentials = true;
         this.axios.post('https://southdog.cool:9999/getsession').then(resp => {
+            console.log('post getsession')
             if (resp.data.status == 200) {
                 store.commit('getCurrentUserInfo', resp.data.result);
             } else {
